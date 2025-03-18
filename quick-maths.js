@@ -73,4 +73,4 @@ for (let i = 0; i < operationButtons.length; i++) {
     });
 }
 
-//gameInterface.remove();
+gameInterface.remove();
