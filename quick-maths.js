@@ -57,7 +57,7 @@ function setScoreText() {
 document.querySelector("html").addEventListener("keydown", function (event) {
     console.log(event.key);
     var answerElement = document.querySelector(".answer");
-    if (inPlay) {
+    if (inPlay && !answerElement.classList.contains("correct")) {
         if (event.key >= '0' && event.key <= '9') {
             answerElement.innerText += event.key
         } else if (event.key == 'Backspace' || event.key == 'Delete') {
