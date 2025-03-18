@@ -5,6 +5,7 @@ var operand1
 var operand2
 var operation = '+'
 var correctAnswer
+var score;
 
 var inPlay = false
 
@@ -35,19 +36,27 @@ function createQuestion() {
 }
 
 function checkAnswer() {
-    var answerElement = document.querySelector("#answer");
-    var userAnswer = parseInt(answerElement.innerHTML);
+    var answerElement = document.querySelector(".answer");
     if (answerElement.innerHTML == correctAnswer) {
-        console.log("Correct!");
-        createQuestion();
-        setQuestionText();
-        answerElement.innerHTML = "";
+        score++;
+        setScoreText();
+        answerElement.classList.add("correct");
+        setTimeout(function() {
+            answerElement.classList.remove("correct");
+            createQuestion();
+            setQuestionText();
+            answerElement.innerHTML = "";
+        }, 250);
     }
+}
+
+function setScoreText() {
+    document.querySelector("#score").innerHTML = "Score: " + score
 }
 
 document.querySelector("html").addEventListener("keydown", function (event) {
     console.log(event.key);
-    var answerElement = document.querySelector("#answer");
+    var answerElement = document.querySelector(".answer");
     if (inPlay) {
         if (event.key >= '0' && event.key <= '9') {
             answerElement.innerText += event.key
@@ -66,10 +75,21 @@ for (let i = 0; i < operationButtons.length; i++) {
     operationButtons[i].addEventListener("click", function() {
         operation = operationButtons[i].innerHTML;
         inPlay = true;
+        score = 0;
         operationChoice.remove();
         document.querySelector("main").appendChild(gameInterface)
         createQuestion();
         setQuestionText();
+        setScoreText();
+    });
+}
+
+var mainMenuButtons = document.querySelectorAll(".back-to-main-menu-btn");
+for (let i = 0; i < mainMenuButtons.length; i++) {
+    mainMenuButtons[i].addEventListener("click", function() {
+        inPlay = false;
+        gameInterface.remove();
+        document.querySelector("main").appendChild(operationChoice);
     });
 }
 
