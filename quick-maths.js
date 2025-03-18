@@ -30,6 +30,7 @@ function createQuestion() {
             correctAnswer = operand1;
             operand1 = temp
             break;
+        default:
     }
 }
 
@@ -62,9 +63,8 @@ document.querySelector("html").addEventListener("keydown", function (event) {
 
 var operationButtons = document.querySelectorAll("#operation-choice button");
 for (let i = 0; i < operationButtons.length; i++) {
-    var operationButton = operationButtons[i];
-    operationButton.addEventListener("click", function() {
-        operation = operationButton.innerHTML;
+    operationButtons[i].addEventListener("click", function() {
+        operation = operationButtons[i].innerHTML;
         inPlay = true;
         operationChoice.remove();
         document.querySelector("main").appendChild(gameInterface)
