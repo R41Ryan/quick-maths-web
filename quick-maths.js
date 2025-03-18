@@ -1,3 +1,6 @@
+var operationChoice = document.querySelector("#operation-choice");
+var gameInterface = document.querySelector("#game-interface");
+
 var operand1
 var operand2
 var operation = '+'
@@ -22,7 +25,7 @@ function createQuestion() {
         case 'x':
             correctAnswer = operand1 * operand2;
             break;
-        case '/':
+        case '÷':
             var temp = operand1 * operand2;
             correctAnswer = operand1;
             operand1 = temp
@@ -54,10 +57,20 @@ document.querySelector("html").addEventListener("keydown", function (event) {
         }
 
         checkAnswer();
-    } else {
-        inPlay = true;
-        operation = '+';
-        createQuestion();
-        setQuestionText();
     }
 })
+
+var operationButtons = document.querySelectorAll("#operation-choice button");
+for (let i = 0; i < operationButtons.length; i++) {
+    var operationButton = operationButtons[i];
+    operationButton.addEventListener("click", function() {
+        operation = operationButton.innerHTML;
+        inPlay = true;
+        operationChoice.remove();
+        document.querySelector("main").appendChild(gameInterface)
+        createQuestion();
+        setQuestionText();
+    });
+}
+
+//gameInterface.remove();
