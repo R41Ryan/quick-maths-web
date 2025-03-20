@@ -1,4 +1,4 @@
-var operationChoice = document.querySelector("#operation-choice");
+var mainMenu = document.querySelector("#main-menu");
 var gameInterface = document.querySelector("#game-interface");
 var answerElement = document.querySelector(".answer");
 
@@ -87,8 +87,8 @@ for (let i = 0; i < operationButtons.length; i++) {
     operation = operationButtons[i].innerText;
     inPlay = true;
     score = 0;
-    operationChoice.remove();
-    document.querySelector("main").appendChild(gameInterface);
+    mainMenu.classList.add("removed");
+    gameInterface.classList.remove("removed");
     startTime = Date.now();
     setTimerText();
     timerIntervalId = setInterval(setTimerText, 1000);
@@ -102,8 +102,8 @@ var mainMenuButtons = document.querySelectorAll(".back-to-main-menu-btn");
 for (let i = 0; i < mainMenuButtons.length; i++) {
   mainMenuButtons[i].addEventListener("click", function () {
     inPlay = false;
-    gameInterface.remove();
-    document.querySelector("main").appendChild(operationChoice);
+    gameInterface.classList.add("removed");
+    mainMenu.classList.remove("removed");
     clearInterval(timerIntervalId);
   });
 };
@@ -126,4 +126,4 @@ document.querySelector(".delete").addEventListener("click", function () {
   answerElement.innerText = answerElement.innerText.slice(0, -1);
 });
 
-gameInterface.remove();
+gameInterface.classList.add("removed");

@@ -1,43 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quick Maths</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <main>
-        <h1>Quick Maths</h1>
+      <h1>Quick Maths</h1>
+      <div id="main-menu">
         <div id="operation-choice">
-            <h2>Choose operation to play</h2>
-            <button id="addition">+</button>
-            <button id="subtraction">-</button>
-            <button id="multiplication">x</button>
-            <button id="division">÷</button>
+          <h2>Choose operation to play</h2>
+          <button id="addition">+</button>
+          <button id="subtraction">-</button>
+          <button id="multiplication">x</button>
+          <button id="division">÷</button>
         </div>
-        <div id="game-interface">
-            <h2 id="timer">0:00</h2>
-            <h2 id="score">Score: </h2>
-            <h2 id="question">Press any key to begin</h2>
-            <h2 class="answer"></h2>
-            <div class="numpad">
-                <button class="num">7</button>
-                <button class="num">8</button>
-                <button class="num">9</button>
-                <button class="num">4</button>
-                <button class="num">5</button>
-                <button class="num">6</button>
-                <button class="num">1</button>
-                <button class="num">2</button>
-                <button class="num">3</button>
-                <button class="minus">-</button>
-                <button class="num zero">0</button>
-                <button class="delete">Del</button>
-            </div>
-            <button class="back-to-main-menu-btn">Back to main menu</button>
+        <div id="settings">
+          <h2>Settings</h2>
+          <div class=".setting min-range">
+            <label>Min Range: </label>
+            <input type="number" value="50" />
+          </div>
+          <div class=".setting max-range">
+            <label>Max Range: </label>
+            <input type="number" value="50" />
+          </div>
         </div>
+      </div>
+      <div id="game-interface">
+        <h2 id="timer">0:00</h2>
+        <h2 id="score">Score:</h2>
+        <h2 id="question">Press any key to begin</h2>
+        <h2 class="answer"></h2>
+        <div class="numpad">
+          <button class="num">7</button>
+          <button class="num">8</button>
+          <button class="num">9</button>
+          <button class="num">4</button>
+          <button class="num">5</button>
+          <button class="num">6</button>
+          <button class="num">1</button>
+          <button class="num">2</button>
+          <button class="num">3</button>
+          <button class="minus">-</button>
+          <button class="num zero">0</button>
+          <button class="delete">Del</button>
+        </div>
+        <button class="back-to-main-menu-btn">Back to main menu</button>
+      </div>
     </main>
     <script src="quick-maths.js"></script>
-</body>
+  </body>
 </html>
