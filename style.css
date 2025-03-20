@@ -30,3 +30,15 @@ body {
 .correct {
     background-color: greenyellow;
 }
+
+.numpad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 1rem;
+}
+
+.zero {
+    grid-column-start: 2;
+    grid-column-end: 2;
+}
