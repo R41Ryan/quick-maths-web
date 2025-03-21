@@ -1,11 +1,33 @@
-var mainMenu = document.querySelector("#main-menu");
-var gameInterface = document.querySelector("#game-interface");
-var answerElement = document.querySelector(".answer");
-var minRangeInput = document.querySelector(".min-range input");
-var maxRangeInput = document.querySelector(".max-range input");
-var timedInput = document.querySelector(".timed input");
-var timerSetting = document.querySelector(".timer");
-var timerInput = document.querySelector(".timer input");
+const mainMenu = document.querySelector("#main-menu");
+const gameInterface = document.querySelector("#game-interface");
+const answerElement = document.querySelector(".answer");
+const minRangeInput = document.querySelector(".min-range input");
+const maxRangeInput = document.querySelector(".max-range input");
+const timedInput = document.querySelector(".timed input");
+const timerSetting = document.querySelector(".timer");
+const timerInput = document.querySelector(".timer input");
+// Sounds from Universal UI/Menu Soundpack by Cyrex Studios
+// Source: https://cyrex-studios.itch.io/universal-ui-soundpack
+// Licensed under CC by 4.0 (https://creativecommons.org/licenses/by/4.0/)
+const audioFiles = {
+  inputDigit: function() {
+    let audio = new Audio("./sounds/Retro1.mp3");
+    audio.play();
+  },
+  deleteDigit: function() {
+    let audio = new Audio("./sounds/Retro2.mp3");
+    audio.play();
+  },
+  correct: function() {
+    let audio = new Audio("./sounds/Retro10.mp3");
+    audio.play();
+  },
+  gameOver: function() {
+    let audio = new Audio("./sounds/Wood Block2.mp3");
+    audio.playbackRate = 0.5
+    audio.play();
+  }
+};
 
 var operand1;
 var operand2;
@@ -24,7 +46,7 @@ var inPlay = false;
 function setQuestionText() {
   document.querySelector("#question").innerText =
     operand1 + " " + operation + " " + operand2;
-};
+}
 
 function createQuestion() {
   operand1 = Math.floor(Math.random() * (maxRange - minRange) + minRange);
@@ -46,12 +68,13 @@ function createQuestion() {
       break;
     default:
   }
-};
+}
 
 function checkAnswer() {
   var answerElement = document.querySelector(".answer");
   if (answerElement.innerText == correctAnswer) {
     score++;
+    audioFiles.correct();
     setScoreText();
     answerElement.classList.add("correct");
     setTimeout(function () {
@@ -61,18 +84,17 @@ function checkAnswer() {
       answerElement.innerText = "";
     }, 250);
   }
-};
+}
 
 function setScoreText() {
   document.querySelector("#score").innerText = "Score: " + score;
-};
+}
 
 function setTimerText() {
   let timerElement = document.querySelector("#timer");
   let timeToBeDisplayed;
   if (isTimed) {
     timeToBeDisplayed = endTime - Date.now();
-
   } else {
     timeToBeDisplayed = Date.now() - startTime;
   }
@@ -81,13 +103,13 @@ function setTimerText() {
   let seconds = Math.floor(timeToBeDisplayed / 1000 - minutes * 60);
   timerElement.innerText =
     String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
-  
-};
+}
 
 function checkTime() {
   if (isTimed) {
     if (Date.now() >= endTime) {
       gameOver();
+      audioFiles.gameOver.play();
     }
   }
   setTimerText();
@@ -101,10 +123,11 @@ function setRanges() {
     minRange = maxRange;
     maxRange = temp;
   }
-};
+}
 
 function gameOver() {
   inPlay = false;
+  audioFiles.gameOver();
   document.querySelector("html").classList.add("game-over");
   answerElement.innerText = "Game Over";
   clearInterval(timerIntervalId);
@@ -115,10 +138,13 @@ document.querySelector("html").addEventListener("keydown", function (event) {
   if (inPlay && !answerElement.classList.contains("correct")) {
     if (event.key >= "0" && event.key <= "9") {
       answerElement.innerText += event.key;
+      audioFiles.inputDigit();
     } else if (event.key == "Backspace" || event.key == "Delete") {
       answerElement.innerText = answerElement.innerText.slice(0, -1);
+      audioFiles.deleteDigit();
     } else if (event.key == "-" && answerElement.innerText.length == 0) {
       answerElement.innerText += "-";
+      audioFiles.inputDigit();
     }
 
     checkAnswer();
@@ -132,6 +158,7 @@ for (let i = 0; i < operationButtons.length; i++) {
     operation = operationButtons[i].innerText;
     inPlay = true;
     score = 0;
+    answerElement.innerText = ""
     mainMenu.classList.add("removed");
     gameInterface.classList.remove("removed");
 
@@ -148,7 +175,7 @@ for (let i = 0; i < operationButtons.length; i++) {
     setQuestionText();
     setScoreText();
   });
-};
+}
 
 var mainMenuButtons = document.querySelectorAll(".back-to-main-menu-btn");
 for (let i = 0; i < mainMenuButtons.length; i++) {
@@ -159,7 +186,7 @@ for (let i = 0; i < mainMenuButtons.length; i++) {
     mainMenu.classList.remove("removed");
     clearInterval(timerIntervalId);
   });
-};
+}
 
 timedInput.addEventListener("click", function () {
   if (timedInput.checked) {
@@ -171,7 +198,7 @@ timedInput.addEventListener("click", function () {
 
 timerInput.addEventListener("input", function () {
   timerInput.value = Math.abs(Math.floor(Number(timerInput.value)));
-})
+});
 
 // Number pad stuff
 var numpadButtons = document.querySelectorAll(".num");
@@ -179,18 +206,21 @@ for (let i = 0; i < numpadButtons.length; i++) {
   numpadButtons[i].addEventListener("click", function () {
     if (inPlay && !answerElement.classList.contains("correct")) {
       answerElement.innerText += numpadButtons[i].innerText;
+      audioFiles.inputDigit();
     }
     checkAnswer();
   });
-};
+}
 document.querySelector(".minus").addEventListener("click", function () {
   if (inPlay && answerElement.innerText.length == 0) {
     answerElement.innerText = "-";
+    audioFiles.inputDigit();
   }
 });
 document.querySelector(".delete").addEventListener("click", function () {
   if (inPlay) {
     answerElement.innerText = answerElement.innerText.slice(0, -1);
+    audioFiles.deleteDigit();
   }
 });
 
