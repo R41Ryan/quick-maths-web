@@ -10,23 +10,10 @@ const timerInput = document.querySelector(".timer input");
 // Source: https://cyrex-studios.itch.io/universal-ui-soundpack
 // Licensed under CC by 4.0 (https://creativecommons.org/licenses/by/4.0/)
 const audioFiles = {
-  inputDigit: function() {
-    let audio = new Audio("./sounds/Retro1.mp3");
-    audio.play();
-  },
-  deleteDigit: function() {
-    let audio = new Audio("./sounds/Retro2.mp3");
-    audio.play();
-  },
-  correct: function() {
-    let audio = new Audio("./sounds/Retro10.mp3");
-    audio.play();
-  },
-  gameOver: function() {
-    let audio = new Audio("./sounds/Wood Block2.mp3");
-    audio.playbackRate = 0.5
-    audio.play();
-  }
+  inputDigit: new Audio("./sounds/Retro1.mp3"),
+  deleteDigit: new Audio("./sounds/Retro2.mp3"),
+  correct: new Audio("./sounds/Retro10.mp3"),
+  gameOver: new Audio("./sounds/Wood Block2.mp3")
 };
 
 var operand1;
@@ -42,6 +29,11 @@ var minRange;
 var maxRange;
 
 var inPlay = false;
+
+function playSound(audio) {
+  audio.currentTime = 0;
+  audio.play();
+}
 
 function setQuestionText() {
   document.querySelector("#question").innerText =
@@ -74,7 +66,7 @@ function checkAnswer() {
   var answerElement = document.querySelector(".answer");
   if (answerElement.innerText == correctAnswer) {
     score++;
-    audioFiles.correct();
+    playSound(audioFiles.correct);
     setScoreText();
     answerElement.classList.add("correct");
     setTimeout(function () {
@@ -109,7 +101,6 @@ function checkTime() {
   if (isTimed) {
     if (Date.now() >= endTime) {
       gameOver();
-      audioFiles.gameOver.play();
     }
   }
   setTimerText();
@@ -127,7 +118,7 @@ function setRanges() {
 
 function gameOver() {
   inPlay = false;
-  audioFiles.gameOver();
+  playSound(audioFiles.gameOver);
   document.querySelector("html").classList.add("game-over");
   answerElement.innerText = "Game Over";
   clearInterval(timerIntervalId);
@@ -138,13 +129,13 @@ document.querySelector("html").addEventListener("keydown", function (event) {
   if (inPlay && !answerElement.classList.contains("correct")) {
     if (event.key >= "0" && event.key <= "9") {
       answerElement.innerText += event.key;
-      audioFiles.inputDigit();
+      playSound(audioFiles.inputDigit);
     } else if (event.key == "Backspace" || event.key == "Delete") {
       answerElement.innerText = answerElement.innerText.slice(0, -1);
-      audioFiles.deleteDigit();
+      playSound(audioFiles.deleteDigit);
     } else if (event.key == "-" && answerElement.innerText.length == 0) {
       answerElement.innerText += "-";
-      audioFiles.inputDigit();
+      playSound(audioFiles.inputDigit);
     }
 
     checkAnswer();
@@ -206,7 +197,7 @@ for (let i = 0; i < numpadButtons.length; i++) {
   numpadButtons[i].addEventListener("click", function () {
     if (inPlay && !answerElement.classList.contains("correct")) {
       answerElement.innerText += numpadButtons[i].innerText;
-      audioFiles.inputDigit();
+      playSound(audioFiles.inputDigit);
     }
     checkAnswer();
   });
@@ -214,13 +205,13 @@ for (let i = 0; i < numpadButtons.length; i++) {
 document.querySelector(".minus").addEventListener("click", function () {
   if (inPlay && answerElement.innerText.length == 0) {
     answerElement.innerText = "-";
-    audioFiles.inputDigit();
+    playSound(audioFiles.inputDigit);
   }
 });
 document.querySelector(".delete").addEventListener("click", function () {
   if (inPlay) {
     answerElement.innerText = answerElement.innerText.slice(0, -1);
-    audioFiles.deleteDigit();
+    playSound(audioFiles.deleteDigit);
   }
 });
 
