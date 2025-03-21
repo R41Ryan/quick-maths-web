@@ -17,6 +17,12 @@ body {
     text-align: center;
 }
 
+#operation-choice button {
+    font-size: larger;
+    font-weight: bolder;
+    padding: 1rem;
+}
+
 .answer {
     padding: 0.5rem;
     display: flex;
@@ -35,8 +41,13 @@ body {
 .numpad {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
     margin: 1rem;
+}
+
+.numpad button {
+    padding: 1rem;
+    font-size: larger;
+    font-weight: bolder;
 }
 
 .zero {
