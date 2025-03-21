@@ -35,6 +35,12 @@ function playSound(audio) {
   audio.play();
 }
 
+function handleRangeInput(inputElement) {
+  if (inputElement.value != "" & inputElement.value != "-") {
+    inputElement.value = parseInt(inputElement.value);
+  }
+}
+
 function setQuestionText() {
   document.querySelector("#question").innerText =
     operand1 + " " + operation + " " + operand2;
@@ -107,8 +113,10 @@ function checkTime() {
 }
 
 function setRanges() {
-  minRange = Math.floor(Number(minRangeInput.value));
-  maxRange = Math.floor(Number(maxRangeInput.value));
+  minRange = parseInt(minRangeInput.value);
+  maxRange = parseInt(maxRangeInput.value);
+  minRange = Number.isNaN(minRange) ? 0 : minRange;
+  maxRange = Number.isNaN(maxRange) ? 0 : maxRange;
   if (minRange > maxRange) {
     let temp = minRange;
     minRange = maxRange;
