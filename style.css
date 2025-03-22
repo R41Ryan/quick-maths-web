@@ -59,6 +59,10 @@ body {
     background-color: red;
 }
 
+.game-win {
+    background-color: green;
+}
+
 .removed {
     display: none;
 }
