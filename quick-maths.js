@@ -165,8 +165,16 @@ document.querySelector("html").addEventListener("keydown", function (event) {
     } else if (event.key == "Backspace" || event.key == "Delete") {
       answerElement.innerText = answerElement.innerText.slice(0, -1);
       playSound(audioFiles.deleteDigit);
-    } else if (event.key == "-" && answerElement.innerText.length == 0) {
-      answerElement.innerText += "-";
+    } else if (event.key == "-") {
+      if (answerElement.innerText.length == 0) {
+        answerElement.innerText = "-"
+      } else {
+        if (answerElement.innerText[0] == "-") {
+          answerElement.innerText = answerElement.innerText.slice(1);
+        } else {
+          answerElement.innerText = "-" + answerElement.innerText;
+        }
+      }
       playSound(audioFiles.inputDigit);
     }
 
@@ -253,9 +261,18 @@ for (let i = 0; i < numpadButtons.length; i++) {
   });
 }
 document.querySelector(".minus").addEventListener("click", function () {
-  if (inPlay && answerElement.innerText.length == 0) {
-    answerElement.innerText = "-";
+  if (inPlay) {
+    if (answerElement.innerText.length == 0) {
+      answerElement.innerText = "-"
+    } else {
+      if (answerElement.innerText[0] == "-") {
+        answerElement.innerText = answerElement.innerText.slice(1);
+      } else {
+        answerElement.innerText = "-" + answerElement.innerText;
+      }
+    }
     playSound(audioFiles.inputDigit);
+    checkAnswer();
   }
 });
 document.querySelector(".delete").addEventListener("click", function () {
