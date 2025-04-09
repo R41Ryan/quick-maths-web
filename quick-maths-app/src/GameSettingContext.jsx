@@ -1,0 +1,40 @@
+import { createContext, useContext, useState } from "react";
+
+const GameSettingContext = createContext();
+
+export function GameSettingProvider({ children }) {
+  const [operation, setOperation] = useState("+");
+  const [minRange, setMinRange] = useState(-10);
+  const [maxRange, setMaxRange] = useState(10);
+  const [timed, setTimed] = useState(false);
+  const [endTime, setEndTime] = useState(60);
+  const [hasGoal, setHasGoal] = useState(false);
+  const [goalCount, setGoalCount] = useState(10);
+
+  return (
+    <GameSettingContext.Provider
+      value={{
+        operation,
+        setOperation,
+        minRange,
+        setMinRange,
+        maxRange,
+        setMaxRange,
+        timed,
+        setTimed,
+        endTime,
+        setEndTime,
+        hasGoal,
+        setHasGoal,
+        goalCount,
+        setGoalCount,
+      }}
+    >
+      {children}
+    </GameSettingContext.Provider>
+  );
+};
+
+export function useGameSettings() {
+    return useContext(GameSettingContext);
+};
