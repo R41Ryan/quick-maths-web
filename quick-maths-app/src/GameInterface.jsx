@@ -14,7 +14,6 @@ function GameInterface({ setScreen }) {
   const [operand2, setOperand2] = useState(
     Math.floor(Math.random() * (maxRange - minRange) + minRange)
   );
-  const question = `${operand1} ${operation} ${operand2}`;
   let correctAnswer = NaN;
   let operand1Text = operand1;
   let operand2Text = operand2;
@@ -38,42 +37,55 @@ function GameInterface({ setScreen }) {
       console.error("Stack trace: ", err.stack);
       throw err;
   }
+  const question = `${operand1Text} ${operation} ${operand2Text}`;
 
   const [answer, setAnswer] = useState("");
   const [time, setTime] = useState("00:00");
   const [score, setScore] = useState(0);
+  const [correct, setCorrect] = useState(false);
 
+  const canInput = useRef(true);
   const startTime = useRef(null);
   const timerIntervalRef = useRef(null);
   const correctTimeoutRef = useRef(null);
 
   function createNewQuestion() {
-    setOperand1(Math.floor(Math.random() * (maxRange - minRange) + minRange));
-    setOperand2(Math.floor(Math.random() * (maxRange - minRange) + minRange));
+    setOperand1(Math.floor(Math.random() * (maxRange - minRange + 1) + minRange));
+    setOperand2(Math.floor(Math.random() * (maxRange - minRange + 1) + minRange));
   }
 
   function handleInputDigit(digit) {
-    playSound(audioFiles.inputDigit);
-    setAnswer(`${answer}${digit}`);
+    if (canInput.current) {
+      playSound(audioFiles.inputDigit);
+      setAnswer(`${answer}${digit}`);
+    }
   }
 
   function handleToggleNegative() {
-    playSound(audioFiles.inputDigit);
-    if (answer.length == 0) {
-      setAnswer("-");
-    } else {
-      if (answer[0] == "-") {
-        setAnswer(answer.slice(1));
+    if (canInput.current) {
+      playSound(audioFiles.inputDigit);
+      if (answer.length == 0) {
+        setAnswer("-");
       } else {
-        setAnswer(`-${answer}`);
+        if (answer[0] == "-") {
+          setAnswer(answer.slice(1));
+        } else {
+          setAnswer(`-${answer}`);
+        }
       }
     }
   }
 
   function handleDeleteDigit() {
-    if (answer.length > 0) {
+    if (answer.length > 0 && canInput.current) {
       playSound(audioFiles.deleteDigit);
       setAnswer(answer.slice(0, -1));
+    }
+  }
+
+  function checkAnswer() {
+    if (answer.length > 0 && Number(answer) == correctAnswer) {
+      setCorrect(true);
     }
   }
 
@@ -92,19 +104,32 @@ function GameInterface({ setScreen }) {
       let seconds = Math.floor(timeToBeDisplayed / 1000 - minutes * 60);
       setTime(
         String(minutes).padStart(2, "0") +
-        ":" +
-        String(seconds).padStart(2, "0")
+          ":" +
+          String(seconds).padStart(2, "0")
       );
     }, 1000);
 
     return () => clearInterval(timerIntervalRef.current);
   }, []);
 
-  let correct = false;
+  useEffect(() => {
+    if (correct) {
+      playSound(audioFiles.correct);
+      canInput.current = false;
+      setScore(score + 1);
+      clearTimeout(correctTimeoutRef.current);
+      correctTimeoutRef.current = setTimeout(() => {
+        setCorrect(false);
+        canInput.current = true;
+        setAnswer("");
+        createNewQuestion();
+      }, 500);
+    }
+  }, [correct]);
 
-  if (Number(answer) == correctAnswer) {
-    correct = true;
-  }
+  useEffect(() => {
+    checkAnswer();
+  }, [answer]);
 
   return (
     <div id="game-interface">
