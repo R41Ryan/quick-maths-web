@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGameSettings } from "./GameSettingContext";
 import { useAudio } from "./AudioContext";
 
@@ -8,14 +8,44 @@ function GameInterface({ setScreen }) {
 
   const { audioFiles, playSound } = useAudio();
 
-  const [ operand1, setOperand1 ] = useState(Math.floor(Math.random() * (maxRange - minRange) + minRange));
-  const [ operand2, setOperand2 ] = useState(Math.floor(Math.random() * (maxRange - minRange) + minRange));
+  const [operand1, setOperand1] = useState(
+    Math.floor(Math.random() * (maxRange - minRange) + minRange)
+  );
+  const [operand2, setOperand2] = useState(
+    Math.floor(Math.random() * (maxRange - minRange) + minRange)
+  );
   const question = `${operand1} ${operation} ${operand2}`;
+  let correctAnswer = NaN;
+  let operand1Text = operand1;
+  let operand2Text = operand2;
+  switch (operation) {
+    case "+":
+      correctAnswer = operand1 + operand2;
+      break;
+    case "-":
+      correctAnswer = operand1 - operand2;
+      break;
+    case "x":
+      correctAnswer = operand1 * operand2;
+      break;
+    case "÷":
+      operand1Text = String(operand1 * operand2);
+      correctAnswer = operand1;
+      break;
+    default:
+      const err = new Error(`Invalid Operation: ${operation}`);
+      console.error("Error Message: ", err.message);
+      console.error("Stack trace: ", err.stack);
+      throw err;
+  }
 
-  const [ answer, setAnswer ] = useState("");
-  const [ time, setTime ] = useState("0:00");
-  const [ score, setScore ] = useState(0);
-  const [ correct, setCorrect ] = useState(false);
+  const [answer, setAnswer] = useState("");
+  const [time, setTime] = useState("00:00");
+  const [score, setScore] = useState(0);
+
+  const startTime = useRef(null);
+  const timerIntervalRef = useRef(null);
+  const correctTimeoutRef = useRef(null);
 
   function createNewQuestion() {
     setOperand1(Math.floor(Math.random() * (maxRange - minRange) + minRange));
@@ -30,21 +60,50 @@ function GameInterface({ setScreen }) {
   function handleToggleNegative() {
     playSound(audioFiles.inputDigit);
     if (answer.length == 0) {
-        setAnswer("-");
+      setAnswer("-");
     } else {
-        if (answer[0] == '-') {
-            setAnswer(answer.slice(1));
-        } else {
-            setAnswer(`-${answer}`);
-        }
+      if (answer[0] == "-") {
+        setAnswer(answer.slice(1));
+      } else {
+        setAnswer(`-${answer}`);
+      }
     }
   }
 
   function handleDeleteDigit() {
     if (answer.length > 0) {
-        playSound(audioFiles.deleteDigit);
-        setAnswer(answer.slice(0, -1));
+      playSound(audioFiles.deleteDigit);
+      setAnswer(answer.slice(0, -1));
     }
+  }
+
+  useEffect(() => {
+    startTime.current = Date.now();
+
+    timerIntervalRef.current = setInterval(() => {
+      let timeToBeDisplayed;
+      if (timed) {
+        timeToBeDisplayed = endTime - Date.now();
+      } else {
+        timeToBeDisplayed = Date.now() - startTime.current;
+      }
+      timeToBeDisplayed = Math.max(0, timeToBeDisplayed);
+      let minutes = Math.floor(timeToBeDisplayed / 1000 / 60);
+      let seconds = Math.floor(timeToBeDisplayed / 1000 - minutes * 60);
+      setTime(
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0")
+      );
+    }, 1000);
+
+    return () => clearInterval(timerIntervalRef.current);
+  }, []);
+
+  let correct = false;
+
+  if (Number(answer) == correctAnswer) {
+    correct = true;
   }
 
   return (
@@ -54,20 +113,49 @@ function GameInterface({ setScreen }) {
       <h2 id="question">{question}</h2>
       <h2 className={`answer ${correct ? "correct" : ""}`}>{answer}</h2>
       <div className="numpad">
-        <button className="num" onClick={() => handleInputDigit("7")}>7</button>
-        <button className="num" onClick={() => handleInputDigit("8")}>8</button>
-        <button className="num" onClick={() => handleInputDigit("9")}>9</button>
-        <button className="num" onClick={() => handleInputDigit("4")}>4</button>
-        <button className="num" onClick={() => handleInputDigit("5")}>5</button>
-        <button className="num" onClick={() => handleInputDigit("6")}>6</button>
-        <button className="num" onClick={() => handleInputDigit("1")}>1</button>
-        <button className="num" onClick={() => handleInputDigit("2")}>2</button>
-        <button className="num" onClick={() => handleInputDigit("3")}>3</button>
-        <button className="minus" onClick={handleToggleNegative}>+/-</button>
-        <button className="num zero" onClick={() => handleInputDigit("0")}>0</button>
-        <button className="delete" onClick={handleDeleteDigit}>Del</button>
+        <button className="num" onClick={() => handleInputDigit("7")}>
+          7
+        </button>
+        <button className="num" onClick={() => handleInputDigit("8")}>
+          8
+        </button>
+        <button className="num" onClick={() => handleInputDigit("9")}>
+          9
+        </button>
+        <button className="num" onClick={() => handleInputDigit("4")}>
+          4
+        </button>
+        <button className="num" onClick={() => handleInputDigit("5")}>
+          5
+        </button>
+        <button className="num" onClick={() => handleInputDigit("6")}>
+          6
+        </button>
+        <button className="num" onClick={() => handleInputDigit("1")}>
+          1
+        </button>
+        <button className="num" onClick={() => handleInputDigit("2")}>
+          2
+        </button>
+        <button className="num" onClick={() => handleInputDigit("3")}>
+          3
+        </button>
+        <button className="minus" onClick={handleToggleNegative}>
+          +/-
+        </button>
+        <button className="num zero" onClick={() => handleInputDigit("0")}>
+          0
+        </button>
+        <button className="delete" onClick={handleDeleteDigit}>
+          Del
+        </button>
       </div>
-      <button className="back-to-main-menu-btn" onClick={() => setScreen("mainMenu")}>Back to main menu</button>
+      <button
+        className="back-to-main-menu-btn"
+        onClick={() => setScreen("mainMenu")}
+      >
+        Back to main menu
+      </button>
     </div>
   );
 }
