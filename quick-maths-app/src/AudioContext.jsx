@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 
 const AudioContext = createContext();
-const soundFilePath = "./assets/sounds/";
+const soundFilePath = "sounds/";
 
 export const AudioProvider = ({ children }) => {
     const audioFiles = {

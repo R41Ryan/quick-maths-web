@@ -19,7 +19,13 @@ function MainMenu({ setScreen }) {
   } = useGameSettings();
 
   function handleOperationSelection(operation) {
+    if (minRange > maxRange) {
+      let temp = minRange;
+      setMinRange(maxRange);
+      setMaxRange(temp);
+    }
     setOperation(operation);
+    setScreen("gameInterface");
   }
 
   function handleSetMinRange(e) {
