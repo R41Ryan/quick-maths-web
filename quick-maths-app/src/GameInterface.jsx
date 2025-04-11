@@ -3,8 +3,15 @@ import { useGameSettings } from "./GameSettingContext";
 import { useAudio } from "./AudioContext";
 
 function GameInterface({ setScreen }) {
-  const { operation, minRange, maxRange, timed, totalTime, hasGoal, goalCount } =
-    useGameSettings();
+  const {
+    operation,
+    minRange,
+    maxRange,
+    timed,
+    totalTime,
+    hasGoal,
+    goalCount,
+  } = useGameSettings();
 
   const { audioFiles, playSound } = useAudio();
 
@@ -43,24 +50,23 @@ function GameInterface({ setScreen }) {
   const [score, setScore] = useState(0);
   const [correct, setCorrect] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+  const [gameWin, setGameWin] = useState(false);
 
-  const endTime = useRef(Date.now() + totalTime * 1000)
+  const endTime = useRef(Date.now() + totalTime * 1000);
   const startTime = useRef(Date.now());
   const [time, setTime] = useState(() => {
     let timeToBeDisplayed;
-      if (timed) {
-        timeToBeDisplayed = endTime.current - Date.now();
-      } else {
-        timeToBeDisplayed = Date.now() - startTime.current;
-      }
-      timeToBeDisplayed = Math.max(0, timeToBeDisplayed);
-      let minutes = Math.floor(timeToBeDisplayed / 1000 / 60);
-      let seconds = Math.floor(timeToBeDisplayed / 1000 - minutes * 60);
-      return (
-        String(minutes).padStart(2, "0") +
-          ":" +
-          String(seconds).padStart(2, "0")
-      );
+    if (timed) {
+      timeToBeDisplayed = endTime.current - Date.now();
+    } else {
+      timeToBeDisplayed = Date.now() - startTime.current;
+    }
+    timeToBeDisplayed = Math.max(0, timeToBeDisplayed);
+    let minutes = Math.floor(timeToBeDisplayed / 1000 / 60);
+    let seconds = Math.floor(timeToBeDisplayed / 1000 - minutes * 60);
+    return (
+      String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0")
+    );
   });
   const canInput = useRef(true);
   const timerIntervalRef = useRef(null);
@@ -77,31 +83,32 @@ function GameInterface({ setScreen }) {
 
   function handleInputDigit(digit) {
     if (canInput.current) {
+      console.log(answer);
       playSound(audioFiles.inputDigit);
-      setAnswer(`${answer}${digit}`);
+      setAnswer((prev) => `${prev}${digit}`);
     }
   }
 
   function handleToggleNegative() {
     if (canInput.current) {
       playSound(audioFiles.inputDigit);
-      if (answer.length == 0) {
-        setAnswer("-");
-      } else {
-        if (answer[0] == "-") {
-          setAnswer(answer.slice(1));
+      setAnswer((prev) => {
+        if (prev.length == 0) {
+          return "-";
         } else {
-          setAnswer(`-${answer}`);
+          if (prev[0] == "-") {
+            return prev.slice(1);
+          } else {
+            return `-${prev}`;
+          }
         }
-      }
+      });
     }
   }
 
   function handleDeleteDigit() {
-    if (answer.length > 0 && canInput.current) {
-      playSound(audioFiles.deleteDigit);
-      setAnswer(answer.slice(0, -1));
-    }
+    playSound(audioFiles.deleteDigit);
+    setAnswer((prev) => prev.slice(0, -1));
   }
 
   function checkAnswer() {
@@ -136,7 +143,22 @@ function GameInterface({ setScreen }) {
       }
     }, 250);
 
-    return () => clearInterval(timerIntervalRef.current);
+    function handleKeyDown(event) {
+      if (event.key >= "0" && event.key <= "9") {
+        handleInputDigit(String(event.key));
+      } else if (event.key == "Backspace" || event.key == "Delete") {
+        handleDeleteDigit();
+      } else if (event.key == "-") {
+        handleToggleNegative();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      clearInterval(timerIntervalRef.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -150,9 +172,15 @@ function GameInterface({ setScreen }) {
         canInput.current = true;
         setAnswer("");
         createNewQuestion();
-      }, 500);
+      }, 250);
     }
   }, [correct]);
+
+  useEffect(() => {
+    if (score >= goalCount && hasGoal) {
+      setGameWin(true);
+    }
+  }, [score]);
 
   useEffect(() => {
     checkAnswer();
@@ -160,9 +188,11 @@ function GameInterface({ setScreen }) {
 
   useEffect(() => {
     if (gameOver) {
+      canInput.current = false;
       playSound(audioFiles.gameOver);
       document.querySelector("html").classList.add("game-over");
       clearInterval(timerIntervalRef.current);
+      clearTimeout(correctTimeoutRef.current);
     } else {
       document.querySelector("html").classList.remove("game-over");
     }
@@ -172,13 +202,29 @@ function GameInterface({ setScreen }) {
     };
   }, [gameOver]);
 
+  useEffect(() => {
+    if (gameWin) {
+      canInput.current = false;
+      playSound(audioFiles.gameWin);
+      document.querySelector("html").classList.add("game-win");
+      clearInterval(timerIntervalRef.current);
+      clearTimeout(correctTimeoutRef.current);
+    } else {
+      document.querySelector("html").classList.remove("game-win");
+    }
+
+    return () => {
+      document.querySelector("html").classList.remove("game-win");
+    };
+  }, [gameWin]);
+
   return (
     <div id="game-interface">
       <h2 id="timer">{time}</h2>
       <h2 id="score">Score: {score}</h2>
       <h2 id="question">{question}</h2>
       <h2 className={`answer ${correct ? "correct" : ""}`}>
-        {gameOver ? "Game Over" : answer}
+        {gameOver ? "Game Over" : gameWin ? "You Win!" : answer}
       </h2>
       <div className="numpad">
         <button className="num" onClick={() => handleInputDigit("7")}>

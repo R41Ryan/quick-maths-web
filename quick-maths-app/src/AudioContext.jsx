@@ -9,7 +9,7 @@ export const AudioProvider = ({ children }) => {
         deleteDigit: new Audio(soundFilePath + "Retro2.mp3"),
         correct: new Audio(soundFilePath + "Retro10.mp3"),
         gameOver: new Audio(soundFilePath + "Wood Block2.mp3"),
-        gameWin: new Audio(soundFilePath + "gameWin.mp3"),
+        gameWin: new Audio(soundFilePath + "gameWin.wav"),
     };
 
     /**
