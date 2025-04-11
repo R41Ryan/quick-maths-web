@@ -170,7 +170,7 @@ function GameInterface({ setScreen }) {
     return () => {
       document.querySelector("html").classList.remove("game-over");
     };
-  });
+  }, [gameOver]);
 
   return (
     <div id="game-interface">
