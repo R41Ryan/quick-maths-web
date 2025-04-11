@@ -10,8 +10,8 @@ function MainMenu({ setScreen }) {
     setMaxRange,
     timed,
     setTimed,
-    endTime,
-    setEndTime,
+    totalTime,
+    setTotalTime,
     hasGoal,
     setHasGoal,
     goalCount,
@@ -49,10 +49,10 @@ function MainMenu({ setScreen }) {
     setTimed(value);
   }
 
-  function handleSetEndTime(e) {
+  function handleSetTotalTime(e) {
     const value = e.target.value;
     if (value === '' || value >= 0) {
-      setEndTime(e.target.value);
+      setTotalTime(Number(e.target.value));
     }
   }
 
@@ -93,7 +93,7 @@ function MainMenu({ setScreen }) {
         </div>
         <div className={`.setting timer ${timed ? "" : "hidden"}`}>
           <label>How much (seconds)? </label>
-          <input type="number" value={endTime} step="1" onChange={handleSetEndTime} />
+          <input type="number" value={totalTime} step="1" onChange={handleSetTotalTime} />
         </div>
         <div className=".setting goal">
           <label>Goal Count? </label>

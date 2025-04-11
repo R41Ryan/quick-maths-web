@@ -7,7 +7,7 @@ export function GameSettingProvider({ children }) {
   const [minRange, setMinRange] = useState(-10);
   const [maxRange, setMaxRange] = useState(10);
   const [timed, setTimed] = useState(false);
-  const [endTime, setEndTime] = useState(60);
+  const [totalTime, setTotalTime] = useState(60);
   const [hasGoal, setHasGoal] = useState(false);
   const [goalCount, setGoalCount] = useState(10);
 
@@ -22,8 +22,8 @@ export function GameSettingProvider({ children }) {
         setMaxRange,
         timed,
         setTimed,
-        endTime,
-        setEndTime,
+        totalTime,
+        setTotalTime,
         hasGoal,
         setHasGoal,
         goalCount,

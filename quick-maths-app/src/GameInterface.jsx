@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { useGameSettings } from "./GameSettingContext";
 import { useAudio } from "./AudioContext";
 
 function GameInterface({ setScreen }) {
-  const { operation, minRange, maxRange, timed, endTime, hasGoal, goalCount } =
+  const { operation, minRange, maxRange, timed, totalTime, hasGoal, goalCount } =
     useGameSettings();
 
   const { audioFiles, playSound } = useAudio();
@@ -40,18 +40,39 @@ function GameInterface({ setScreen }) {
   const question = `${operand1Text} ${operation} ${operand2Text}`;
 
   const [answer, setAnswer] = useState("");
-  const [time, setTime] = useState("00:00");
   const [score, setScore] = useState(0);
   const [correct, setCorrect] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
 
+  const endTime = useRef(Date.now() + totalTime * 1000)
+  const startTime = useRef(Date.now());
+  const [time, setTime] = useState(() => {
+    let timeToBeDisplayed;
+      if (timed) {
+        timeToBeDisplayed = endTime.current - Date.now();
+      } else {
+        timeToBeDisplayed = Date.now() - startTime.current;
+      }
+      timeToBeDisplayed = Math.max(0, timeToBeDisplayed);
+      let minutes = Math.floor(timeToBeDisplayed / 1000 / 60);
+      let seconds = Math.floor(timeToBeDisplayed / 1000 - minutes * 60);
+      return (
+        String(minutes).padStart(2, "0") +
+          ":" +
+          String(seconds).padStart(2, "0")
+      );
+  });
   const canInput = useRef(true);
-  const startTime = useRef(null);
   const timerIntervalRef = useRef(null);
   const correctTimeoutRef = useRef(null);
 
   function createNewQuestion() {
-    setOperand1(Math.floor(Math.random() * (maxRange - minRange + 1) + minRange));
-    setOperand2(Math.floor(Math.random() * (maxRange - minRange + 1) + minRange));
+    setOperand1(
+      Math.floor(Math.random() * (maxRange - minRange + 1) + minRange)
+    );
+    setOperand2(
+      Math.floor(Math.random() * (maxRange - minRange + 1) + minRange)
+    );
   }
 
   function handleInputDigit(digit) {
@@ -89,13 +110,15 @@ function GameInterface({ setScreen }) {
     }
   }
 
-  useEffect(() => {
-    startTime.current = Date.now();
+  function handleTimeOut() {
+    clearInterval(timerIntervalRef.current);
+  }
 
+  useEffect(() => {
     timerIntervalRef.current = setInterval(() => {
       let timeToBeDisplayed;
       if (timed) {
-        timeToBeDisplayed = endTime - Date.now();
+        timeToBeDisplayed = endTime.current - Date.now();
       } else {
         timeToBeDisplayed = Date.now() - startTime.current;
       }
@@ -107,7 +130,11 @@ function GameInterface({ setScreen }) {
           ":" +
           String(seconds).padStart(2, "0")
       );
-    }, 1000);
+
+      if (endTime.current - Date.now() < 0 && timed) {
+        setGameOver(true);
+      }
+    }, 250);
 
     return () => clearInterval(timerIntervalRef.current);
   }, []);
@@ -131,12 +158,28 @@ function GameInterface({ setScreen }) {
     checkAnswer();
   }, [answer]);
 
+  useEffect(() => {
+    if (gameOver) {
+      playSound(audioFiles.gameOver);
+      document.querySelector("html").classList.add("game-over");
+      clearInterval(timerIntervalRef.current);
+    } else {
+      document.querySelector("html").classList.remove("game-over");
+    }
+
+    return () => {
+      document.querySelector("html").classList.remove("game-over");
+    };
+  });
+
   return (
     <div id="game-interface">
       <h2 id="timer">{time}</h2>
       <h2 id="score">Score: {score}</h2>
       <h2 id="question">{question}</h2>
-      <h2 className={`answer ${correct ? "correct" : ""}`}>{answer}</h2>
+      <h2 className={`answer ${correct ? "correct" : ""}`}>
+        {gameOver ? "Game Over" : answer}
+      </h2>
       <div className="numpad">
         <button className="num" onClick={() => handleInputDigit("7")}>
           7
