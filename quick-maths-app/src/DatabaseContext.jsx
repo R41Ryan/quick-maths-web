@@ -1,17 +1,62 @@
-import { createContext, useContext } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { createContext, useContext, useEffect, useState } from "react";
+import supabase from "./supabaseClient";
 
 const DatabaseContext = createContext();
 
 export const DatabaseProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  async function signUp(email, password) {
+    const { data, error } = await supabase.auth.signUp({ email, password });
+
+    if (error) {
+      console.error("Error signing up:", error.message);
+      return null;
+    } else {
+      setUser(data.user);
+      return data.user;
+    }
+  }
+
+  async function signIn(email, password) {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      console.error("Error signing in:", error.message);
+      return null;
+    } else {
+      setUser(data.user);
+      return data.user;
+    }
+  }
+
+  async function signOut() {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Error signing out:", error.message);
+    } else {
+      setUser(null);
+    }
+  }
+
+  useEffect(() => {
+    const session = supabase.auth.getSession();
+    if (session) {
+      setUser(session.user);
+    }
+
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => {
+      data.subscription.unsubscribe();
+    };
+  }, []);
 
   return (
-    <DatabaseContext.Provider value={database}>
+    <DatabaseContext.Provider value={{supabase, signUp, signIn, signOut, user}}>
       {children}
     </DatabaseContext.Provider>
   );

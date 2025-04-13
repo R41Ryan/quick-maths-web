@@ -5,6 +5,8 @@ import { DatabaseProvider } from "./DatabaseContext";
 import Header from "./Header";
 import MainMenu from "./MainMenu";
 import GameInterface from "./GameInterface";
+import SignUpInterface from "./SignUpInterface";
+import SignInInterface from "./SignInInterface";
 
 function App() {
   const [screen, setScreen] = useState("mainMenu");
@@ -18,6 +20,12 @@ function App() {
             {screen === "mainMenu" && <MainMenu setScreen={setScreen} />}
             {screen === "gameInterface" && (
               <GameInterface setScreen={setScreen} />
+            )}
+            {screen === "signUp" && (
+              <SignUpInterface setScreen={setScreen} />
+            )}
+            {screen === "signIn" && (
+              <SignInInterface setScreen={setScreen} />
             )}
           </AudioProvider>
         </GameSettingProvider>

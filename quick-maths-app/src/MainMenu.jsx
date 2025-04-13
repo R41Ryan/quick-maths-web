@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDatabase } from "./DatabaseContext";
 import { useGameSettings } from "./GameSettingContext";
 
 function MainMenu({ setScreen }) {
@@ -18,6 +19,8 @@ function MainMenu({ setScreen }) {
     setGoalCount,
   } = useGameSettings();
 
+  const { user, signOut } = useDatabase();
+
   function handleOperationSelection(operation) {
     if (minRange > maxRange) {
       let temp = minRange;
@@ -33,7 +36,7 @@ function MainMenu({ setScreen }) {
     const integersOnlyRegex = /^-?\d*$/;
     if (integersOnlyRegex.test(value)) {
       setMinRange(Number(value));
-    };
+    }
   }
 
   function handleSetMaxRange(e) {
@@ -41,7 +44,7 @@ function MainMenu({ setScreen }) {
     const integersOnlyRegex = /^-?\d*$/;
     if (integersOnlyRegex.test(value)) {
       setMaxRange(Number(value));
-    };
+    }
   }
 
   function handleSetTimed(e) {
@@ -51,7 +54,7 @@ function MainMenu({ setScreen }) {
 
   function handleSetTotalTime(e) {
     const value = e.target.value;
-    if (value === '' || value >= 0) {
+    if (value === "" || value >= 0) {
       setTotalTime(Number(e.target.value));
     }
   }
@@ -63,29 +66,62 @@ function MainMenu({ setScreen }) {
 
   function handleSetGoalCount(e) {
     const value = e.target.value;
-    if (value === '' || value >= 0) {
+    if (value === "" || value >= 0) {
       setGoalCount(e.target.value);
     }
   }
 
   return (
     <div id="main-menu">
+      {user != null && (
+        <div>
+          <h2>Welcome, {user.email}</h2>
+          <button onClick={() => signOut()}>Sign Out</button>
+        </div>
+      )}
+      {user == null && (
+        <div>
+          <button onClick={() => setScreen("signUp")}>Sign Up</button>
+          <button onClick={() => setScreen("signIn")}>Sign In</button>
+        </div>
+      )}
       <div id="operation-choice">
         <h2>Choose operation to play</h2>
-        <button onClick={() => handleOperationSelection("+")} id="addition">+</button>
-        <button onClick={() => handleOperationSelection("-")} id="subtraction">-</button>
-        <button onClick={() => handleOperationSelection("x")} id="multiplication">x</button>
-        <button onClick={() => handleOperationSelection("÷")} id="division">÷</button>
+        <button onClick={() => handleOperationSelection("+")} id="addition">
+          +
+        </button>
+        <button onClick={() => handleOperationSelection("-")} id="subtraction">
+          -
+        </button>
+        <button
+          onClick={() => handleOperationSelection("x")}
+          id="multiplication"
+        >
+          x
+        </button>
+        <button onClick={() => handleOperationSelection("÷")} id="division">
+          ÷
+        </button>
       </div>
       <div id="settings">
         <h2>Settings</h2>
         <div className=".setting min-range">
           <label>Min Range: </label>
-          <input type="text" value={minRange} step="1" onChange={handleSetMinRange} />
+          <input
+            type="text"
+            value={minRange}
+            step="1"
+            onChange={handleSetMinRange}
+          />
         </div>
         <div className=".setting max-range">
           <label>Max Range: </label>
-          <input type="text" value={maxRange} step="1" onChange={handleSetMaxRange} />
+          <input
+            type="text"
+            value={maxRange}
+            step="1"
+            onChange={handleSetMaxRange}
+          />
         </div>
         <div className=".setting timed">
           <label>Timed? </label>
@@ -93,15 +129,29 @@ function MainMenu({ setScreen }) {
         </div>
         <div className={`.setting timer ${timed ? "" : "hidden"}`}>
           <label>How much (seconds)? </label>
-          <input type="number" value={totalTime} step="1" onChange={handleSetTotalTime} />
+          <input
+            type="number"
+            value={totalTime}
+            step="1"
+            onChange={handleSetTotalTime}
+          />
         </div>
         <div className=".setting goal">
           <label>Goal Count? </label>
-          <input type="checkbox" checked={hasGoal} onChange={handleSetHasGoal}/>
+          <input
+            type="checkbox"
+            checked={hasGoal}
+            onChange={handleSetHasGoal}
+          />
         </div>
         <div className={`.setting count ${hasGoal ? "" : "hidden"}`}>
           <label>How many question? </label>
-          <input type="number" value={goalCount} step="1" onChange={handleSetGoalCount} />
+          <input
+            type="number"
+            value={goalCount}
+            step="1"
+            onChange={handleSetGoalCount}
+          />
         </div>
       </div>
     </div>
