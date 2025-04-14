@@ -12,7 +12,9 @@ function SignUpInterface({ setScreen }) {
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
-    signUp(email, password)
+    const displayName = form["display-name"].value;
+
+    signUp(displayName, email, password)
       .then((user) => {
         if (user) {
           console.log("User signed up successfully:", user);
@@ -30,6 +32,10 @@ function SignUpInterface({ setScreen }) {
     <div className="sign-up-interface">
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="display-name">Username:</label>
+          <input type="text" id="display-name" name="display-name" required />
+        </div>
         <div>
           <label htmlFor="email">Email:</label>
           <input type="email" id="email" name="email" required />

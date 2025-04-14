@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDatabase } from "./DatabaseContext";
 import { useGameSettings } from "./GameSettingContext";
 
@@ -21,7 +21,9 @@ function MainMenu({ setScreen }) {
     setGoalCount,
   } = useGameSettings();
 
-  const { user, signOut } = useDatabase();
+  const { user, signOut, getProfile } = useDatabase();
+
+  const [profile, setProfile] = useState(null);
 
   function handleOperationSelection(operation) {
     if (minRange > maxRange) {
@@ -78,12 +80,30 @@ function MainMenu({ setScreen }) {
     }
   }
 
+  useEffect(() => {
+    async function fetchProfile() {
+      if (user != null) {
+        const profileData = await getProfile();
+        setProfile(profileData);
+      } else {
+        setProfile(null);
+      }
+    }
+
+    fetchProfile();
+  }, [user]);
+
   return (
     <div id="main-menu">
-      {user != null && (
+      {user != null && profile != null && (
         <div>
-          <h2>Welcome, {user.email}</h2>
+          <h2>Welcome, {profile.display_name}</h2>
           <button onClick={() => signOut()}>Sign Out</button>
+        </div>
+      )}
+      {user != null && profile == null && (
+        <div>
+          <h2>Loading...</h2>
         </div>
       )}
       {user == null && (

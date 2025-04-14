@@ -6,20 +6,50 @@ const DatabaseContext = createContext();
 export const DatabaseProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  async function signUp(email, password) {
-    const { data, error } = await supabase.auth.signUp({ email, password });
-
-    if (error) {
-      console.error("Error signing up:", error.message);
-      throw error;
-    } else {
-      setUser(data.user);
-      return data.user;
+  async function signUp(displayName, email, password) {
+    if (!displayName || !email || !password) {
+      const missingFieldsError = new Error("Missing required fields");
+      missingFieldsError.status = 400; // Bad Request
+      throw missingFieldsError;
     }
+
+    // Check if the display name is available
+    const isAvailable = await checkDisplayName(displayName);
+    if (!isAvailable) {
+      const nameTakenError = new Error("Display name already exists");
+      nameTakenError.status = 409; // Conflict
+      throw nameTakenError;
+    }
+
+    const { data: userData, error: userError } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (userError) {
+      console.error("Error signing up:", userError.message);
+      throw userError;
+    }
+
+    const { data: profileData, error: profileError } = await supabase
+      .from("profiles")
+      .insert([{ display_name: displayName, user_id: userData.user.id }])
+      .single();
+
+    if (profileError) {
+      console.error("Error creating profile:", profileError.message);
+      throw profileError;
+    }
+    
+    setUser(userData.user);
+    return userData.user;
   }
 
   async function signIn(email, password) {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     if (error) {
       console.error("Error signing in:", error.message);
@@ -40,6 +70,40 @@ export const DatabaseProvider = ({ children }) => {
     }
   }
 
+  async function checkDisplayName(displayName) {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("display_name", displayName);
+
+    if (error) {
+      console.error("Error checking display name:", error.message);
+      return false;
+    } else {
+      console.log(data);
+      if (data.length > 0) {
+        return false; // Display name already exists
+      } else {
+        return true;
+      }
+    }
+  }
+
+  async function getProfile() {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", user.id)
+      .single();
+
+    if (error) {
+      console.error("Error fetching profile:", error.message);
+      return null;
+    } else {
+      return data;
+    }
+  }
+
   useEffect(() => {
     const session = supabase.auth.getSession();
     if (session) {
@@ -56,7 +120,9 @@ export const DatabaseProvider = ({ children }) => {
   }, []);
 
   return (
-    <DatabaseContext.Provider value={{supabase, signUp, signIn, signOut, user}}>
+    <DatabaseContext.Provider
+      value={{ supabase, signUp, signIn, signOut, getProfile, user }}
+    >
       {children}
     </DatabaseContext.Provider>
   );
