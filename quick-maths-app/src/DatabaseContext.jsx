@@ -11,7 +11,7 @@ export const DatabaseProvider = ({ children }) => {
 
     if (error) {
       console.error("Error signing up:", error.message);
-      return null;
+      throw error;
     } else {
       setUser(data.user);
       return data.user;
@@ -23,7 +23,7 @@ export const DatabaseProvider = ({ children }) => {
 
     if (error) {
       console.error("Error signing in:", error.message);
-      return null;
+      throw error;
     } else {
       setUser(data.user);
       return data.user;

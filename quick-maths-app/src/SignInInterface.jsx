@@ -1,7 +1,10 @@
 import { useDatabase } from "./DatabaseContext";
+import { useState } from "react";
 
 function SignInInterface({ setScreen }) {
   const { signIn } = useDatabase();
+
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,7 +22,7 @@ function SignInInterface({ setScreen }) {
         }
       })
       .catch((error) => {
-        console.error("Error signing up:", error.message);
+        setErrorMessage(error.message);
       });
   };
 
@@ -35,6 +38,9 @@ function SignInInterface({ setScreen }) {
           <label htmlFor="password">Password:</label>
           <input type="password" id="password" name="password" required />
         </div>
+        {errorMessage.length > 0 && (
+          <p className="error-message">{errorMessage}</p>
+        )}
         <button type="submit">Sign In</button>
       </form>
       <button onClick={() => setScreen("mainMenu")}>Back to Main Menu</button>
