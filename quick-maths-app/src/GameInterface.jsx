@@ -7,6 +7,7 @@ function GameInterface({ setScreen }) {
     operation,
     minRange,
     maxRange,
+    hasNegatives,
     timed,
     totalTime,
     hasGoal,
@@ -15,12 +16,24 @@ function GameInterface({ setScreen }) {
 
   const { audioFiles, playSound } = useAudio();
 
-  const [operand1, setOperand1] = useState(
-    Math.floor(Math.random() * (maxRange - minRange) + minRange)
-  );
-  const [operand2, setOperand2] = useState(
-    Math.floor(Math.random() * (maxRange - minRange) + minRange)
-  );
+  const [operand1, setOperand1] = useState(() => {
+    let operand = Math.floor(
+      Math.random() * (maxRange - minRange + 1) + minRange
+    );
+    if (hasNegatives) {
+      operand = Math.random() < 0.5 ? -operand : operand;
+    }
+    return operand;
+  });
+  const [operand2, setOperand2] = useState(() => {
+    let operand = Math.floor(
+      Math.random() * (maxRange - minRange + 1) + minRange
+    );
+    if (hasNegatives) {
+      operand = Math.random() < 0.5 ? -operand : operand;
+    }
+    return operand;
+  });
   let correctAnswer = NaN;
   let operand1Text = operand1;
   let operand2Text = operand2;
@@ -73,17 +86,29 @@ function GameInterface({ setScreen }) {
   const correctTimeoutRef = useRef(null);
 
   function createNewQuestion() {
-    setOperand1(
-      Math.floor(Math.random() * (maxRange - minRange + 1) + minRange)
-    );
-    setOperand2(
-      Math.floor(Math.random() * (maxRange - minRange + 1) + minRange)
-    );
+    console.log(hasNegatives);
+    setOperand1(() => {
+      let operand = Math.floor(
+        Math.random() * (maxRange - minRange + 1) + minRange
+      );
+      if (hasNegatives) {
+        operand = Math.random() < 0.5 ? -operand : operand;
+      }
+      return operand;
+    });
+    setOperand2(() => {
+      let operand = Math.floor(
+        Math.random() * (maxRange - minRange + 1) + minRange
+      );
+      if (hasNegatives) {
+        operand = Math.random() < 0.5 ? -operand : operand;
+      }
+      return operand;
+    });
   }
 
   function handleInputDigit(digit) {
     if (canInput.current) {
-      console.log(answer);
       playSound(audioFiles.inputDigit);
       setAnswer((prev) => `${prev}${digit}`);
     }

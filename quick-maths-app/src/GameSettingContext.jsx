@@ -4,8 +4,9 @@ const GameSettingContext = createContext();
 
 export function GameSettingProvider({ children }) {
   const [operation, setOperation] = useState("+");
-  const [minRange, setMinRange] = useState(-10);
+  const [minRange, setMinRange] = useState(0);
   const [maxRange, setMaxRange] = useState(10);
+  const [hasNegatives, setHasNegatives] = useState(false);
   const [timed, setTimed] = useState(false);
   const [totalTime, setTotalTime] = useState(60);
   const [hasGoal, setHasGoal] = useState(false);
@@ -20,6 +21,8 @@ export function GameSettingProvider({ children }) {
         setMinRange,
         maxRange,
         setMaxRange,
+        hasNegatives,
+        setHasNegatives,
         timed,
         setTimed,
         totalTime,

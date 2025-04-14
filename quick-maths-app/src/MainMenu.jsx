@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDatabase } from "./DatabaseContext";
 import { useGameSettings } from "./GameSettingContext";
 
@@ -9,6 +9,8 @@ function MainMenu({ setScreen }) {
     setMinRange,
     maxRange,
     setMaxRange,
+    hasNegatives,
+    setHasNegatives,
     timed,
     setTimed,
     totalTime,
@@ -33,7 +35,7 @@ function MainMenu({ setScreen }) {
 
   function handleSetMinRange(e) {
     const value = e.target.value;
-    const integersOnlyRegex = /^-?\d*$/;
+    const integersOnlyRegex = /^\d*$/;
     if (integersOnlyRegex.test(value)) {
       setMinRange(Number(value));
     }
@@ -41,10 +43,15 @@ function MainMenu({ setScreen }) {
 
   function handleSetMaxRange(e) {
     const value = e.target.value;
-    const integersOnlyRegex = /^-?\d*$/;
+    const integersOnlyRegex = /^\d*$/;
     if (integersOnlyRegex.test(value)) {
       setMaxRange(Number(value));
     }
+  }
+
+  function handleSetHasNegatives(e) {
+    const value = e.target.checked;
+    setHasNegatives(value);
   }
 
   function handleSetTimed(e) {
@@ -121,6 +128,14 @@ function MainMenu({ setScreen }) {
             value={maxRange}
             step="1"
             onChange={handleSetMaxRange}
+          />
+        </div>
+        <div className=".setting negatives">
+          <label>Allow Negatives? </label>
+          <input
+            type="checkbox"
+            checked={hasNegatives}
+            onChange={handleSetHasNegatives}
           />
         </div>
         <div className=".setting timed">
