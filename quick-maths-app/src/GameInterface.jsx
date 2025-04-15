@@ -1,6 +1,7 @@
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGameSettings } from "./GameSettingContext";
 import { useAudio } from "./AudioContext";
+import { useDatabase } from "./DatabaseContext";
 
 function GameInterface({ setScreen }) {
   const {
@@ -15,6 +16,8 @@ function GameInterface({ setScreen }) {
   } = useGameSettings();
 
   const { audioFiles, playSound } = useAudio();
+
+  const { user, insertScore } = useDatabase();
 
   const [operand1, setOperand1] = useState(() => {
     let operand = Math.floor(
@@ -86,7 +89,6 @@ function GameInterface({ setScreen }) {
   const correctTimeoutRef = useRef(null);
 
   function createNewQuestion() {
-    console.log(hasNegatives);
     setOperand1(() => {
       let operand = Math.floor(
         Math.random() * (maxRange - minRange + 1) + minRange
@@ -234,6 +236,11 @@ function GameInterface({ setScreen }) {
       document.querySelector("html").classList.add("game-win");
       clearInterval(timerIntervalRef.current);
       clearTimeout(correctTimeoutRef.current);
+      if (user) {
+        console.log("score:", score);
+        console.log("time:", Math.floor((Date.now() - startTime.current) / 1000));
+        insertScore(score, Math.floor((Date.now() - startTime.current) / 1000));
+      }
     } else {
       document.querySelector("html").classList.remove("game-win");
     }

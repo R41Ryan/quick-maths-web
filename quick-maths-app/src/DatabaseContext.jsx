@@ -104,6 +104,18 @@ export const DatabaseProvider = ({ children }) => {
     }
   }
 
+  async function insertScore(score, time) {
+    const { data, error } = await supabase
+      .from("scores")
+      .insert([{ user_id: user.id, score, time_seconds: time }])
+      .single();
+    
+    if (error) {
+      console.error("Error inserting score:", error.message);
+      throw error;
+    }
+  }
+
   useEffect(() => {
     const session = supabase.auth.getSession();
     if (session) {
@@ -121,7 +133,7 @@ export const DatabaseProvider = ({ children }) => {
 
   return (
     <DatabaseContext.Provider
-      value={{ supabase, signUp, signIn, signOut, getProfile, user }}
+      value={{ supabase, user, signUp, signIn, signOut, getProfile, insertScore }}
     >
       {children}
     </DatabaseContext.Provider>
