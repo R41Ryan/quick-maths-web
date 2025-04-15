@@ -7,6 +7,7 @@ import MainMenu from "./MainMenu";
 import GameInterface from "./GameInterface";
 import SignUpInterface from "./SignUpInterface";
 import SignInInterface from "./SignInInterface";
+import PersonalScoreDisplay from "./personalScoreDisplay";
 
 function App() {
   const [screen, setScreen] = useState("mainMenu");
@@ -26,6 +27,9 @@ function App() {
             )}
             {screen === "signIn" && (
               <SignInInterface setScreen={setScreen} />
+            )}
+            {screen === "personalScoreDisplay" && (
+              <PersonalScoreDisplay setScreen={setScreen} />
             )}
           </AudioProvider>
         </GameSettingProvider>

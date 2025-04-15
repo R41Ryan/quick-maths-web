@@ -116,6 +116,21 @@ export const DatabaseProvider = ({ children }) => {
     }
   }
 
+  async function getUserScores() {
+    const { data, error } = await supabase
+      .from("scores")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching scores:", error.message);
+      return null;
+    } else {
+      return data;
+    }
+  }
+
   useEffect(() => {
     const session = supabase.auth.getSession();
     if (session) {
@@ -133,7 +148,7 @@ export const DatabaseProvider = ({ children }) => {
 
   return (
     <DatabaseContext.Provider
-      value={{ supabase, user, signUp, signIn, signOut, getProfile, insertScore }}
+      value={{ supabase, user, signUp, signIn, signOut, getProfile, insertScore, getUserScores, checkDisplayName }}
     >
       {children}
     </DatabaseContext.Provider>

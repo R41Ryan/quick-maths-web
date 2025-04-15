@@ -98,6 +98,9 @@ function MainMenu({ setScreen }) {
       {user != null && profile != null && (
         <div>
           <h2>Welcome, {profile.display_name}</h2>
+          <button onClick={() => setScreen("personalScoreDisplay")}>
+            View Personal Scores
+          </button>
           <button onClick={() => signOut()}>Sign Out</button>
         </div>
       )}
