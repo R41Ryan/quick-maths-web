@@ -67,6 +67,7 @@ function GameInterface({ setScreen }) {
   const [correct, setCorrect] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [gameWin, setGameWin] = useState(false);
+  const [savedScore, setSavedScore] = useState(false);
 
   const endTime = useRef(Date.now() + totalTime * 1000);
   const startTime = useRef(Date.now());
@@ -144,8 +145,11 @@ function GameInterface({ setScreen }) {
     }
   }
 
-  function handleTimeOut() {
-    clearInterval(timerIntervalRef.current);
+  function handleSaveScore() {
+    if (user) {
+      insertScore(score, Math.floor((Date.now() - startTime.current) / 1000));
+      setSavedScore(true);
+    }
   }
 
   useEffect(() => {
@@ -236,11 +240,6 @@ function GameInterface({ setScreen }) {
       document.querySelector("html").classList.add("game-win");
       clearInterval(timerIntervalRef.current);
       clearTimeout(correctTimeoutRef.current);
-      if (user) {
-        console.log("score:", score);
-        console.log("time:", Math.floor((Date.now() - startTime.current) / 1000));
-        insertScore(score, Math.floor((Date.now() - startTime.current) / 1000));
-      }
     } else {
       document.querySelector("html").classList.remove("game-win");
     }
@@ -258,6 +257,8 @@ function GameInterface({ setScreen }) {
       <h2 className={`answer ${correct ? "correct" : ""}`}>
         {gameOver ? "Game Over" : gameWin ? "You Win!" : answer}
       </h2>
+      {gameWin && !savedScore && user && (<button onClick={handleSaveScore}>Save Score?</button>)}
+      {gameWin && savedScore && user && (<h3>Saved Score!</h3>)}
       <div className="numpad">
         <button className="num" onClick={() => handleInputDigit("7")}>
           7
