@@ -131,6 +131,20 @@ export const DatabaseProvider = ({ children }) => {
     }
   }
 
+  async function getAllScores() {
+    const { data, error } = await supabase
+      .from("scores_with_display_name")
+      .select("*")
+      .order("score", { ascending: false })
+
+    if (error) {
+      console.error("Error fetching all scores:", error.message);
+      return null;
+    } else {
+      return data;
+    }
+  }
+
   useEffect(() => {
     const session = supabase.auth.getSession();
     if (session) {
@@ -148,7 +162,7 @@ export const DatabaseProvider = ({ children }) => {
 
   return (
     <DatabaseContext.Provider
-      value={{ supabase, user, signUp, signIn, signOut, getProfile, insertScore, getUserScores, checkDisplayName }}
+      value={{ supabase, user, signUp, signIn, signOut, getProfile, insertScore, getUserScores, getAllScores, checkDisplayName }}
     >
       {children}
     </DatabaseContext.Provider>

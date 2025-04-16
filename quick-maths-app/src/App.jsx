@@ -8,6 +8,7 @@ import GameInterface from "./GameInterface";
 import SignUpInterface from "./SignUpInterface";
 import SignInInterface from "./SignInInterface";
 import PersonalScoreDisplay from "./personalScoreDisplay";
+import GlobalScoreDisplay from "./GlobalScoreDisplay";
 
 function App() {
   const [screen, setScreen] = useState("mainMenu");
@@ -30,6 +31,9 @@ function App() {
             )}
             {screen === "personalScoreDisplay" && (
               <PersonalScoreDisplay setScreen={setScreen} />
+            )}
+            {screen === "globalScoreDisplay" && (
+              <GlobalScoreDisplay setScreen={setScreen} />
             )}
           </AudioProvider>
         </GameSettingProvider>

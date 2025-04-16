@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useDatabase } from "./DatabaseContext";
 
-function PersonalScoreDisplay({ setScreen }) {
-  const { user, getUserScores } = useDatabase();
-  const [personalScores, setPersonalScores] = useState([]);
-  const sortMethod = useRef("date");
+function GlobalScoreDisplay({ setScreen }) {
+  const { user, getAllScores } = useDatabase();
+  const [globalScores, setGlobalScores] = useState([]);
+  const sortMethod = useRef("score");
 
   function sortScoresByDate(a, b) {
     return new Date(b.created_at) - new Date(a.created_at);
@@ -16,53 +16,51 @@ function PersonalScoreDisplay({ setScreen }) {
 
   function handleSortByDate() {
     if (sortMethod.current !== "date") {
-      const sortedScores = [...personalScores].sort(sortScoresByDate);
-      setPersonalScores(sortedScores);
+      const sortedScores = [...globalScores].sort(sortScoresByDate);
+      setGlobalScores(sortedScores);
       sortMethod.current = "date";
     } else {
-      const sortedScores = [...personalScores].sort(sortScoresByDateReverse);
-      setPersonalScores(sortedScores);
+      const sortedScores = [...globalScores].sort(sortScoresByDateReverse);
+      setGlobalScores(sortedScores);
       sortMethod.current = "dateReverse";
     }
   }
 
   function handleSortByTime() {
     if (sortMethod.current !== "time") {
-      const sortedScores = [...personalScores].sort((a, b) => b.time_seconds - a.time_seconds);
-      setPersonalScores(sortedScores);
+      const sortedScores = [...globalScores].sort((a, b) => b.time_seconds - a.time_seconds);
+      setGlobalScores(sortedScores);
       sortMethod.current = "time";
     } else {
-      const sortedScores = [...personalScores].sort((a, b) => a.time_seconds - b.time_seconds);
-      setPersonalScores(sortedScores);
+      const sortedScores = [...globalScores].sort((a, b) => a.time_seconds - b.time_seconds);
+      setGlobalScores(sortedScores);
       sortMethod.current = "timeReverse";
     }
   }
 
   function handleSortByScore() {
     if (sortMethod.current !== "score") {
-      const sortedScores = [...personalScores].sort((a, b) => b.score - a.score);
-      setPersonalScores(sortedScores);
+      const sortedScores = [...globalScores].sort((a, b) => b.score - a.score);
+      setGlobalScores(sortedScores);
       sortMethod.current = "score";
     } else {
-      const sortedScores = [...personalScores].sort((a, b) => a.score - b.score);
-      setPersonalScores(sortedScores);
+      const sortedScores = [...globalScores].sort((a, b) => a.score - b.score);
+      setGlobalScores(sortedScores);
       sortMethod.current = "scoreReverse";
     }
   }
 
   useEffect(() => {
     async function fetchScores() {
-      if (user) {
-        const scores = await getUserScores();
-        setPersonalScores(scores);
-      }
+        const scores = await getAllScores();
+        setGlobalScores(scores);
     }
     fetchScores();
   }, []);
 
   return (
-    <div className="personal-score-display">
-      <h2>Your Scores</h2>
+    <div className="global-score-display">
+      <h2>Global Scores</h2>
       <table>
         <thead>
           <tr>
@@ -72,15 +70,15 @@ function PersonalScoreDisplay({ setScreen }) {
           </tr>
         </thead>
         <tbody>
-          {personalScores.length > 0 &&
-            personalScores.map((item, index) => (
+          {globalScores.length > 0 &&
+            globalScores.map((item, index) => (
               <tr key={index}>
                 <td>{item.score}</td>
                 <td>{item.time_seconds}</td>
                 <td>{new Date(item.created_at).toLocaleString()}</td>
               </tr>
             ))}
-          {personalScores.length === 0 && (
+          {globalScores.length === 0 && (
             <tr>
               <td colSpan="3">No scores available.</td>
             </tr>
@@ -92,4 +90,4 @@ function PersonalScoreDisplay({ setScreen }) {
   );
 }
 
-export default PersonalScoreDisplay;
+export default GlobalScoreDisplay;

@@ -115,6 +115,9 @@ function MainMenu({ setScreen }) {
           <button onClick={() => setScreen("signIn")}>Sign In</button>
         </div>
       )}
+      <button onClick={() => setScreen("globalScoreDisplay")}>
+        View Global Scores
+      </button>
       <div id="operation-choice">
         <h2>Choose operation to play</h2>
         <button onClick={() => handleOperationSelection("+")} id="addition">
