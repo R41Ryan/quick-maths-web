@@ -6,15 +6,22 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  Label,
 } from "recharts";
 import { useDatabase } from "./DatabaseContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
 import dayjs from "dayjs";
 
-function PersonalProgressChart() {
+function PersonalProgressChart({ setScreen }) {
   const { getUserScores } = useDatabase();
   const [scores, setScores] = useState([]);
   const [data, setData] = useState([]);
+
+  const isMobile = useMediaQuery({
+    query: '(max-width: 768px)'
+  });
+  const chartWidth = isMobile ? 300 : 600;
 
   useEffect(() => {
     async function fetchScores() {
@@ -30,7 +37,7 @@ function PersonalProgressChart() {
   useEffect(() => {
     if (scores.length > 0) {
       const formattedData = scores.map((score) => ({
-        date: dayjs(score.created_at).format("YYYY-MM-DD HH:mm:ss"),
+        date: dayjs(score.created_at).format("YYYY-MM-DD"),
         score: score.score,
       }));
       setData(formattedData);
@@ -38,24 +45,45 @@ function PersonalProgressChart() {
   }, [scores]);
 
   return (
-    <div>
+    <div id="personal-progress-chart">
       <h2>Personal Progress Chart</h2>
-      <LineChart
-        width={600}
-        height={300}
-        data={data}
-        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-      >
-        <CartesianGrid stroke="#444" height={300} />
-        <XAxis dataKey="date" stroke="#8884d8" />
-        <YAxis stroke="#8884d8" />
-        <Line
-          type="monotone"
-          dataKey="score"
-          stroke="#8884d8"
-          activeDot={{ r: 8 }}
-        />
-      </LineChart>
+      <div className="chart-container">
+        <div className="chart-inner">
+          <LineChart
+            width={chartWidth}
+            height={300}
+            data={data}
+            margin={{ top: 5, right: 10, left: 10, bottom: 20 }}
+          >
+            <CartesianGrid stroke="#444" height={300} />
+            <XAxis dataKey="date" stroke="#8884d8">
+              <Label
+                value="Date"
+                offset={-10}
+                position="insideBottom"
+                fill="#8884d8"
+              />
+            </XAxis>
+            <YAxis stroke="#8884d8">
+              <Label
+                value="Score"
+                offset={-10}
+                position="insideLeft"
+                fill="#8884d8"
+              />
+            </YAxis>
+            <Line
+              type="monotone"
+              dataKey="score"
+              stroke="#8884d8"
+              activeDot={{ r: 8 }}
+            />
+          </LineChart>
+          <button onClick={() => setScreen("mainMenu")}>
+            Back to Main Menu
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

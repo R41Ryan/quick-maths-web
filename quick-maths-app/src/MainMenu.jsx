@@ -101,6 +101,9 @@ function MainMenu({ setScreen }) {
           <button onClick={() => setScreen("personalScoreDisplay")}>
             View Personal Scores
           </button>
+          <button onClick={() => setScreen("personalProgressChart")}>
+            View Personal Progress Chart
+          </button>
           <button onClick={() => signOut()}>Sign Out</button>
         </div>
       )}
