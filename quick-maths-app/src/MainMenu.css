@@ -1,0 +1,43 @@
+#operation-choice {
+    background-color: white;
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 10px;
+}
+
+#operation-choice h2 {
+    color: black;
+}
+
+#operation-choice button {
+    background-color: rgb(255, 255, 255);
+    margin: 0 5px;
+    width: 50px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+#operation-choice button:hover {
+    background-color: rgb(36, 240, 255);
+    scale: 1.1;
+}
+
+#settings {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    background-color: white;
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 10px;
+    color: black;
+}
+
+#settings input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.timer, .count {
+    transition: all 0.2s ease;
+}

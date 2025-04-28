@@ -24,12 +24,8 @@ function App() {
             {screen === "gameInterface" && (
               <GameInterface setScreen={setScreen} />
             )}
-            {screen === "signUp" && (
-              <SignUpInterface setScreen={setScreen} />
-            )}
-            {screen === "signIn" && (
-              <SignInInterface setScreen={setScreen} />
-            )}
+            {screen === "signUp" && <SignUpInterface setScreen={setScreen} />}
+            {screen === "signIn" && <SignInInterface setScreen={setScreen} />}
             {screen === "personalScoreDisplay" && (
               <PersonalScoreDisplay setScreen={setScreen} />
             )}

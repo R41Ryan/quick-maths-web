@@ -1,3 +1,4 @@
+import "./MainMenu.css";
 import { useEffect, useRef, useState } from "react";
 import { useDatabase } from "./DatabaseContext";
 import { useGameSettings } from "./GameSettingContext";

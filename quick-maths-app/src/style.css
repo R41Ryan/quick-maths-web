@@ -3,7 +3,7 @@ html {
     color: white;
     padding: 0;
     margin: 0;
-    transition: background 250ms;
+    transition: all 250ms;
 }
 
 body {
@@ -68,5 +68,6 @@ body {
 }
 
 .hidden {
-    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
 }
