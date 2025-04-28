@@ -96,16 +96,24 @@ function MainMenu({ setScreen }) {
 
   return (
     <div id="main-menu">
+      <button
+        className="global-options"
+        onClick={() => setScreen("globalScoreDisplay")}
+      >
+        View Global Scores
+      </button>
       {user != null && profile != null && (
         <div>
           <h2>Welcome, {profile.display_name}</h2>
-          <button onClick={() => setScreen("personalScoreDisplay")}>
-            View Personal Scores
-          </button>
-          <button onClick={() => setScreen("personalProgressChart")}>
-            View Personal Progress Chart
-          </button>
-          <button onClick={() => signOut()}>Sign Out</button>
+          <div className="profile-options">
+            <button onClick={() => setScreen("personalScoreDisplay")}>
+              View Personal Scores
+            </button>
+            <button onClick={() => setScreen("personalProgressChart")}>
+              View Personal Progress Chart
+            </button>
+            <button onClick={() => signOut()}>Sign Out</button>
+          </div>
         </div>
       )}
       {user != null && profile == null && (
@@ -114,14 +122,11 @@ function MainMenu({ setScreen }) {
         </div>
       )}
       {user == null && (
-        <div>
+        <div className="profile-options">
           <button onClick={() => setScreen("signUp")}>Sign Up</button>
           <button onClick={() => setScreen("signIn")}>Sign In</button>
         </div>
       )}
-      <button onClick={() => setScreen("globalScoreDisplay")}>
-        View Global Scores
-      </button>
       <div id="operation-choice">
         <h2>Choose operation to play</h2>
         <button onClick={() => handleOperationSelection("+")} id="addition">

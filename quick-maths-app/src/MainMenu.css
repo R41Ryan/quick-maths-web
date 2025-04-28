@@ -1,3 +1,25 @@
+#main-menu button {
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+#main-menu button:hover {
+    background-color: rgb(36, 240, 255);
+    scale: 1.1;
+}
+
+.profile-options {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    background-color: white;
+    padding: 1rem;
+    margin: 0.5rem;
+    border-radius: 10px;
+}
+
 #operation-choice {
     background-color: white;
     padding: 1rem;
@@ -10,17 +32,8 @@
 }
 
 #operation-choice button {
-    background-color: rgb(255, 255, 255);
     margin: 0 5px;
     width: 50px;
-    border-radius: 10px;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
-
-#operation-choice button:hover {
-    background-color: rgb(36, 240, 255);
-    scale: 1.1;
 }
 
 #settings {
