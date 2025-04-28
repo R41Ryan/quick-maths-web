@@ -1,35 +1,35 @@
-.global-score-display {
+.personal-score-display {
     background-color: white;
     color: black;
     padding: 1rem;
     border-radius: 10px;
 }
 
-.global-score-display table {
+.personal-score-display table {
     width: 100%;
     border-collapse: collapse;
     border: 1px solid black;
     margin: 1rem 0;
 }
 
-.global-score-display h2 {
+.personal-score-display h2 {
     margin: 0.5rem;
     border-bottom: 2px solid black;
 }
 
-.global-score-display th, .global-score-display td {
+.personal-score-display th, .personal-score-display td {
     padding: 0.5rem 1rem;
 }
 
-.global-score-display th {
+.personal-score-display th {
     background-color: #f0f0f0;
 }
 
-.global-score-display tr {
+.personal-score-display tr {
     background-color: #cecece;
     transition: background-color 0.2s ease;
 }
 
-.global-score-display tr:hover {
+.personal-score-display tr:hover {
     background-color: #f9f9f9;
 }

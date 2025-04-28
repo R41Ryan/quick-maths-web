@@ -71,3 +71,15 @@ body {
     opacity: 0;
     pointer-events: none;
 }
+
+.back-to-main-menu-btn {
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.back-to-main-menu-btn:hover {
+    background-color: rgb(0, 0, 0);
+    color: white;
+}

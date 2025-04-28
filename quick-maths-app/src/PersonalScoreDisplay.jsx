@@ -1,3 +1,4 @@
+import "./PersonalScoreDisplay.css";
 import { useEffect, useRef, useState } from "react";
 import { useDatabase } from "./DatabaseContext";
 
@@ -87,7 +88,7 @@ function PersonalScoreDisplay({ setScreen }) {
           )}
         </tbody>
       </table>
-      <button onClick={() => setScreen("mainMenu")}>Back to Main Menu</button>
+      <button className="back-to-main-menu-btn" onClick={() => setScreen("mainMenu")}>Back to Main Menu</button>
     </div>
   );
 }

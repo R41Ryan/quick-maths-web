@@ -86,7 +86,7 @@ function GlobalScoreDisplay({ setScreen }) {
           )}
         </tbody>
       </table>
-      <button onClick={() => setScreen("mainMenu")}>Back to Main Menu</button>
+      <button className="back-to-main-menu-btn" onClick={() => setScreen("mainMenu")}>Back to Main Menu</button>
     </div>
   );
 }
