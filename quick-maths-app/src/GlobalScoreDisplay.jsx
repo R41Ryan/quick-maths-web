@@ -1,3 +1,4 @@
+import "./GlobalScoreDisplay.css";
 import { useEffect, useRef, useState } from "react";
 import { useDatabase } from "./DatabaseContext";
 
