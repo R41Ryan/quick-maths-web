@@ -91,7 +91,7 @@ function PersonalScoreDisplay({ setScreen }) {
             ))}
           {personalScores.length === 0 && (
             <tr>
-              <td colSpan="3">No scores available.</td>
+              <td colSpan="4">No scores available.</td>
             </tr>
           )}
         </tbody>
