@@ -7,9 +7,10 @@ import MainMenu from "./MainMenu";
 import GameInterface from "./GameInterface";
 import SignUpInterface from "./SignUpInterface";
 import SignInInterface from "./SignInInterface";
-import PersonalScoreDisplay from "./personalScoreDisplay";
+import PersonalScoreDisplay from "./PersonalScoreDisplay";
 import PersonalProgressChart from "./PersonalProgressChart";
 import GlobalScoreDisplay from "./GlobalScoreDisplay";
+import ProfileSettings from "./ProfileSettings";
 
 function App() {
   const [screen, setScreen] = useState("mainMenu");
@@ -34,6 +35,9 @@ function App() {
             )}
             {screen === "globalScoreDisplay" && (
               <GlobalScoreDisplay setScreen={setScreen} />
+            )}
+            {screen === "profileSettings" && (
+              <ProfileSettings setScreen={setScreen} />
             )}
           </AudioProvider>
         </GameSettingProvider>
