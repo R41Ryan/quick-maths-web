@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDatabase } from "./DatabaseContext";
 
 function PersonalScoreDisplay({ setScreen }) {
-  const { user, getUserScores } = useDatabase();
+  const { user, getUserScores, deleteScore } = useDatabase();
   const [personalScores, setPersonalScores] = useState([]);
   const sortMethod = useRef("date");
 
@@ -51,6 +51,12 @@ function PersonalScoreDisplay({ setScreen }) {
     }
   }
 
+  function handleDeleteScore(scoreId) {
+    deleteScore(scoreId).then(() => {
+      setPersonalScores((prevScores) => prevScores.filter((score) => score.id !== scoreId));
+    });
+  }
+
   useEffect(() => {
     async function fetchScores() {
       if (user) {
@@ -80,7 +86,7 @@ function PersonalScoreDisplay({ setScreen }) {
                 <td>{item.score}</td>
                 <td>{item.time_seconds}</td>
                 <td>{new Date(item.created_at).toLocaleString()}</td>
-                <td><button>Delete</button></td>
+                <td><button onClick={() => handleDeleteScore(item.id)}>Delete</button></td>
               </tr>
             ))}
           {personalScores.length === 0 && (
