@@ -70,6 +70,7 @@ function PersonalScoreDisplay({ setScreen }) {
             <th onClick={handleSortByScore}>Score</th>
             <th onClick={handleSortByTime}>Time (seconds)</th>
             <th onClick={handleSortByDate}>Date and Time</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -79,6 +80,7 @@ function PersonalScoreDisplay({ setScreen }) {
                 <td>{item.score}</td>
                 <td>{item.time_seconds}</td>
                 <td>{new Date(item.created_at).toLocaleString()}</td>
+                <td><button>Delete</button></td>
               </tr>
             ))}
           {personalScores.length === 0 && (
