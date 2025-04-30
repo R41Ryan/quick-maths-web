@@ -49,7 +49,7 @@ function PersonalProgressChart({ setScreen }) {
     <div id="personal-progress-chart">
       <h2>Personal Progress Chart</h2>
       {scores.length <= 0 ? (
-        <h2>No Scores Available</h2>
+        <h3>No Scores Available</h3>
       ) : (
         <div className="chart-container">
           <div className="chart-inner">
@@ -59,27 +59,27 @@ function PersonalProgressChart({ setScreen }) {
               data={data}
               margin={{ top: 5, right: 10, left: 10, bottom: 20 }}
             >
-              <CartesianGrid stroke="#444" height={300} />
-              <XAxis dataKey="date" stroke="#8884d8">
+              <CartesianGrid stroke="#000000" height={300} vertical={false} />
+              <XAxis dataKey="date" stroke="#000000">
                 <Label
                   value="Date"
                   offset={-10}
                   position="insideBottom"
-                  fill="#8884d8"
+                  fill="#000000"
                 />
               </XAxis>
-              <YAxis stroke="#8884d8">
+              <YAxis stroke="#000000">
                 <Label
                   value="Score"
                   offset={-10}
                   position="insideLeft"
-                  fill="#8884d8"
+                  fill="#000000"
                 />
               </YAxis>
               <Line
                 type="monotone"
                 dataKey="score"
-                stroke="#8884d8"
+                stroke="#000000"
                 activeDot={{ r: 8 }}
               />
             </LineChart>
