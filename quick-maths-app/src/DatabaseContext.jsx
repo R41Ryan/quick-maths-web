@@ -157,6 +157,18 @@ export const DatabaseProvider = ({ children }) => {
     }
   }
 
+  async function deleteAllUserScores() {
+    const { error } = await supabase
+      .from("scores")
+      .delete()
+      .eq("user_id", user.id);
+
+    if (error) {
+      console.error("Error deleting all scores:", error.message);
+      throw error;
+    }
+  }
+
   useEffect(() => {
     const session = supabase.auth.getSession();
     if (session) {
@@ -174,7 +186,7 @@ export const DatabaseProvider = ({ children }) => {
 
   return (
     <DatabaseContext.Provider
-      value={{ supabase, user, signUp, signIn, signOut, getProfile, insertScore, getUserScores, getAllScores, checkDisplayName, deleteScore }}
+      value={{ supabase, user, signUp, signIn, signOut, getProfile, insertScore, getUserScores, getAllScores, checkDisplayName, deleteScore, deleteAllUserScores }}
     >
       {children}
     </DatabaseContext.Provider>
