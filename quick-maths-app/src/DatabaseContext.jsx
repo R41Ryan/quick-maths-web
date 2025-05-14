@@ -104,6 +104,21 @@ export const DatabaseProvider = ({ children }) => {
     }
   }
 
+  async function getSpecificProfile(userId) {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", userId)
+      .single()
+
+    if (error) {
+      console.error("Error fetching profile:", error.message);
+      return null;
+    } else {
+      return data;
+    }
+  }
+
   async function insertScore(score, time) {
     const { data, error } = await supabase
       .from("scores")
@@ -186,7 +201,7 @@ export const DatabaseProvider = ({ children }) => {
 
   return (
     <DatabaseContext.Provider
-      value={{ supabase, user, signUp, signIn, signOut, getProfile, insertScore, getUserScores, getAllScores, checkDisplayName, deleteScore, deleteAllUserScores }}
+      value={{ supabase, user, signUp, signIn, signOut, getProfile, getSpecificProfile, insertScore, getUserScores, getAllScores, checkDisplayName, deleteScore, deleteAllUserScores }}
     >
       {children}
     </DatabaseContext.Provider>
