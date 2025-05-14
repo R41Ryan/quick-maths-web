@@ -1,0 +1,30 @@
+.delete-score, .confirm-delete-all-scores {
+    background-color: rgb(255, 0, 0);
+    color: white;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.delete-score:hover, .confirm-delete-all-scores:hover {
+    background-color: white;
+    color: red;
+    border-color: red;
+    border-style: solid;
+}
+
+.profile-settings .modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    color: black;
+    padding: 5rem;
+    border-radius: 10px;
+    transition: all ease 0.2s;
+}
+
+.profile-settings .modal button {
+    margin: 0 50px
+}
