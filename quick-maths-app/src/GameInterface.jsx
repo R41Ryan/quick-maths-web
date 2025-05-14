@@ -89,6 +89,47 @@ function GameInterface({ setScreen }) {
   const timerIntervalRef = useRef(null);
   const correctTimeoutRef = useRef(null);
 
+  function calculateScore() {
+    let points = 1;
+    let operand1String = operand1.toString();
+    let operand2String = operand2.toString();
+
+    if (operand1 < 0) {
+      points += 1;
+      points += operand1String.length - 1;
+    } else {
+      points += operand1String.length;
+    }
+
+    if (operand2 < 0) {
+      points += 1;
+      points += operand2String.length - 1;
+    } else {
+      points += operand2String.length;
+    }
+
+    switch (operation) {
+      case "+":
+      break;
+    case "-":
+      points += 1
+      break;
+    case "x":
+      points += 2;
+      break;
+    case "÷":
+      points += 3;
+      break;
+    default:
+      const err = new Error(`Invalid Operation to calcuate score: ${operation}`);
+      console.error("Error Message: ", err.message);
+      console.error("Stack trace: ", err.stack);
+      throw err;
+    }
+
+    return points;
+  }
+
   function createNewQuestion() {
     setOperand1(() => {
       let operand = Math.floor(
@@ -196,7 +237,7 @@ function GameInterface({ setScreen }) {
     if (correct) {
       playSound(audioFiles.correct);
       canInput.current = false;
-      setScore(score + 1);
+      setScore(score + calculateScore());
       clearTimeout(correctTimeoutRef.current);
       correctTimeoutRef.current = setTimeout(() => {
         setCorrect(false);
