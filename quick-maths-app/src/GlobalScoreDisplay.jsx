@@ -3,8 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import { useDatabase } from "./DatabaseContext";
 
 function GlobalScoreDisplay({ setScreen }) {
-  const { user, getAllScores } = useDatabase();
+  const { user, getAllScores, getAllProfiles } = useDatabase();
   const [globalScores, setGlobalScores] = useState([]);
+  const [profiles, setProfiles] = useState({});
   const sortMethod = useRef("score");
 
   function sortScoresByDate(a, b) {
@@ -55,6 +56,15 @@ function GlobalScoreDisplay({ setScreen }) {
     async function fetchScores() {
         const scores = await getAllScores();
         setGlobalScores(scores);
+
+        const profileData = await getAllProfiles();
+
+        const profileMap = {};
+        profileData.forEach((profile) => {
+          profileMap[profile.user_id] = profile.display_name;
+        })
+
+        setProfiles(profileMap)
     }
     fetchScores();
   }, []);
@@ -65,6 +75,7 @@ function GlobalScoreDisplay({ setScreen }) {
       <table>
         <thead>
           <tr>
+            <th>User</th>
             <th onClick={handleSortByScore}>Score</th>
             <th onClick={handleSortByTime}>Time (seconds)</th>
             <th onClick={handleSortByDate}>Date and Time</th>
@@ -74,6 +85,7 @@ function GlobalScoreDisplay({ setScreen }) {
           {globalScores.length > 0 &&
             globalScores.map((item, index) => (
               <tr key={index}>
+                <td>{profiles[item.user_id]}</td>
                 <td>{item.score}</td>
                 <td>{item.time_seconds}</td>
                 <td>{new Date(item.created_at).toLocaleString()}</td>
