@@ -199,9 +199,11 @@ export const DatabaseProvider = ({ children }) => {
 
   async function getUserHighScore() {
     const { data, error } = await supabase
-      .from("highscores")
+      .from("scores")
       .select("*")
       .eq("user_id", user.id)
+      .order("score", {ascending: false})
+      .limit(1)
       .single()
 
     if (error) {
@@ -212,42 +214,16 @@ export const DatabaseProvider = ({ children }) => {
     }
   }
 
-  async function upsertUserHighScore(newScore) {
-    const { error } = await supabase
-      .from("highscores")
-      .upsert({ user_id: user.id, score: newScore },
-        { onConflict: [user_id] }
-      );
-
-    if (error) {
-      console.error("Error upserting user's high score");
-      throw error;
-    }
-  }
-
   async function getAllHighScores() {
     const { data, error } = await supabase
-      .from("highscores")
+      .from("top_scores_per_user")
       .select("*")
-      .order("score", { ascending: false })
 
     if (error) {
       console.error("Errors getting all highscores", error.message);
       throw error;
     } else {
       return data;
-    }
-  }
-
-  async function deleteUserHighScore() {
-    const { error } = await supabase
-      .from("scores")
-      .delete()
-      .eq("user_id", user.id);
-
-    if (error) {
-      console.error("Error deleting all scores:", error.message);
-      throw error;
     }
   }
 
@@ -268,7 +244,7 @@ export const DatabaseProvider = ({ children }) => {
 
   return (
     <DatabaseContext.Provider
-      value={{ supabase, user, signUp, signIn, signOut, getProfile, getAllProfiles, getSpecificProfile, insertScore, getUserScores, getAllScores, checkDisplayName, deleteScore, deleteAllUserScores, getUserHighScore, upsertUserHighScore, getAllHighScores, deleteUserHighScore }}
+      value={{ supabase, user, signUp, signIn, signOut, getProfile, getAllProfiles, getSpecificProfile, insertScore, getUserScores, getAllScores, checkDisplayName, deleteScore, deleteAllUserScores, getUserHighScore, getAllHighScores }}
     >
       {children}
     </DatabaseContext.Provider>

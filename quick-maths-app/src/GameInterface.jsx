@@ -17,7 +17,7 @@ function GameInterface({ setScreen }) {
 
   const { audioFiles, playSound } = useAudio();
 
-  const { user, insertScore } = useDatabase();
+  const { user, insertScore, getUserScores, upsertUserHighScore } = useDatabase();
 
   const [operand1, setOperand1] = useState(() => {
     let operand = Math.floor(
@@ -67,7 +67,6 @@ function GameInterface({ setScreen }) {
   const [correct, setCorrect] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [gameWin, setGameWin] = useState(false);
-  const [savedScore, setSavedScore] = useState(false);
 
   const endTime = useRef(Date.now() + totalTime * 1000);
   const startTime = useRef(Date.now());
@@ -186,10 +185,9 @@ function GameInterface({ setScreen }) {
     }
   }
 
-  function handleSaveScore() {
+  async function handleSaveScore() {
     if (user) {
       insertScore(score, Math.floor((Date.now() - startTime.current) / 1000));
-      setSavedScore(true);
     }
   }
 
@@ -265,6 +263,7 @@ function GameInterface({ setScreen }) {
       document.querySelector("html").classList.add("game-over");
       clearInterval(timerIntervalRef.current);
       clearTimeout(correctTimeoutRef.current);
+      handleSaveScore();
     } else {
       document.querySelector("html").classList.remove("game-over");
     }
@@ -281,6 +280,7 @@ function GameInterface({ setScreen }) {
       document.querySelector("html").classList.add("game-win");
       clearInterval(timerIntervalRef.current);
       clearTimeout(correctTimeoutRef.current);
+      handleSaveScore();
     } else {
       document.querySelector("html").classList.remove("game-win");
     }
@@ -298,8 +298,6 @@ function GameInterface({ setScreen }) {
       <h2 className={`answer ${correct ? "correct" : ""}`}>
         {gameOver ? "Game Over" : gameWin ? "You Win!" : answer}
       </h2>
-      {gameWin && !savedScore && user && (<button onClick={handleSaveScore}>Save Score?</button>)}
-      {gameWin && savedScore && user && (<h3>Saved Score!</h3>)}
       <div className="numpad">
         <button className="num" onClick={() => handleInputDigit("7")}>
           7
