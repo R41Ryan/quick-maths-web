@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDatabase } from "./DatabaseContext";
 
 function GlobalScoreDisplay({ setScreen }) {
-  const { user, getAllScores, getAllProfiles } = useDatabase();
+  const { user, getAllHighScores, getAllProfiles } = useDatabase();
   const [globalScores, setGlobalScores] = useState([]);
   const [profiles, setProfiles] = useState({});
   const sortMethod = useRef("score");
@@ -54,7 +54,7 @@ function GlobalScoreDisplay({ setScreen }) {
 
   useEffect(() => {
     async function fetchScores() {
-        const scores = await getAllScores();
+        const scores = await getAllHighScores();
         setGlobalScores(scores);
 
         const profileData = await getAllProfiles();
@@ -71,7 +71,7 @@ function GlobalScoreDisplay({ setScreen }) {
 
   return (
     <div className="global-score-display">
-      <h2>Global Scores</h2>
+      <h2>Global High Scores</h2>
       <table>
         <thead>
           <tr>
@@ -93,7 +93,7 @@ function GlobalScoreDisplay({ setScreen }) {
             ))}
           {globalScores.length === 0 && (
             <tr>
-              <td colSpan="3">No scores available.</td>
+              <td colSpan="4">No scores available.</td>
             </tr>
           )}
         </tbody>

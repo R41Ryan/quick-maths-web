@@ -100,7 +100,7 @@ function MainMenu({ setScreen }) {
         className="global-options"
         onClick={() => setScreen("globalScoreDisplay")}
       >
-        View Global Scores
+        View Global High Scores
       </button>
       {user != null && profile != null && (
         <div>
