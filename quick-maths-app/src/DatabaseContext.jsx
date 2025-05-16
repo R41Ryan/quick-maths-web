@@ -40,7 +40,7 @@ export const DatabaseProvider = ({ children }) => {
       console.error("Error creating profile:", profileError.message);
       throw profileError;
     }
-    
+
     setUser(userData.user);
     return userData.user;
   }
@@ -137,7 +137,7 @@ export const DatabaseProvider = ({ children }) => {
       .from("scores")
       .insert([{ user_id: user.id, score, time_seconds: time }])
       .single();
-    
+
     if (error) {
       console.error("Error inserting score:", error.message);
       throw error;
@@ -197,6 +197,60 @@ export const DatabaseProvider = ({ children }) => {
     }
   }
 
+  async function getUserHighScore() {
+    const { data, error } = await supabase
+      .from("highscores")
+      .select("*")
+      .eq("user_id", user.id)
+      .single()
+
+    if (error) {
+      console.error("Error getting user's high score");
+      throw error;
+    } else {
+      return data;
+    }
+  }
+
+  async function upsertUserHighScore(newScore) {
+    const { error } = await supabase
+      .from("highscores")
+      .upsert({ user_id: user.id, score: newScore },
+        { onConflict: [user_id] }
+      );
+
+    if (error) {
+      console.error("Error upserting user's high score");
+      throw error;
+    }
+  }
+
+  async function getAllHighScores() {
+    const { data, error } = await supabase
+      .from("highscores")
+      .select("*")
+      .order("score", { ascending: false })
+
+    if (error) {
+      console.error("Errors getting all highscores", error.message);
+      throw error;
+    } else {
+      return data;
+    }
+  }
+
+  async function deleteUserHighScore() {
+    const { error } = await supabase
+      .from("scores")
+      .delete()
+      .eq("user_id", user.id);
+
+    if (error) {
+      console.error("Error deleting all scores:", error.message);
+      throw error;
+    }
+  }
+
   useEffect(() => {
     const session = supabase.auth.getSession();
     if (session) {
@@ -214,7 +268,7 @@ export const DatabaseProvider = ({ children }) => {
 
   return (
     <DatabaseContext.Provider
-      value={{ supabase, user, signUp, signIn, signOut, getProfile, getAllProfiles, getSpecificProfile, insertScore, getUserScores, getAllScores, checkDisplayName, deleteScore, deleteAllUserScores }}
+      value={{ supabase, user, signUp, signIn, signOut, getProfile, getAllProfiles, getSpecificProfile, insertScore, getUserScores, getAllScores, checkDisplayName, deleteScore, deleteAllUserScores, getUserHighScore, upsertUserHighScore, getAllHighScores, upsertUserHighScore }}
     >
       {children}
     </DatabaseContext.Provider>
