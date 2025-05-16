@@ -268,7 +268,7 @@ export const DatabaseProvider = ({ children }) => {
 
   return (
     <DatabaseContext.Provider
-      value={{ supabase, user, signUp, signIn, signOut, getProfile, getAllProfiles, getSpecificProfile, insertScore, getUserScores, getAllScores, checkDisplayName, deleteScore, deleteAllUserScores, getUserHighScore, upsertUserHighScore, getAllHighScores, upsertUserHighScore }}
+      value={{ supabase, user, signUp, signIn, signOut, getProfile, getAllProfiles, getSpecificProfile, insertScore, getUserScores, getAllScores, checkDisplayName, deleteScore, deleteAllUserScores, getUserHighScore, upsertUserHighScore, getAllHighScores }}
     >
       {children}
     </DatabaseContext.Provider>
