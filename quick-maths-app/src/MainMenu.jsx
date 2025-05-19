@@ -22,9 +22,10 @@ function MainMenu({ setScreen }) {
     setGoalCount,
   } = useGameSettings();
 
-  const { user, signOut, getProfile } = useDatabase();
+  const { user, signOut, getProfile, getUserHighScore } = useDatabase();
 
   const [profile, setProfile] = useState(null);
+  const [userHighScore, setUserHighScore] = useState(null);
 
   function handleOperationSelection(operation) {
     if (minRange > maxRange) {
@@ -94,6 +95,21 @@ function MainMenu({ setScreen }) {
     fetchProfile();
   }, [user]);
 
+  useEffect(() => {
+    async function fetchUserHighScore() {
+      if (profile != null) {
+        const userHighScoreData = await getUserHighScore();
+        if (userHighScoreData != null) {
+          setUserHighScore(userHighScoreData);
+        } else {
+          setUserHighScore(null);
+        }
+      }
+    }
+
+    fetchUserHighScore();
+  }, [profile])
+
   return (
     <div id="main-menu">
       <button
@@ -105,6 +121,10 @@ function MainMenu({ setScreen }) {
       {user != null && profile != null && (
         <div>
           <h2>Welcome, {profile.display_name}</h2>
+          <div className="user-high-score-display">
+            <div>Your personal high score</div>
+            <h3>{userHighScore ? userHighScore.score : "N/A" }</h3>
+          </div>
           <div className="profile-options">
             <button onClick={() => setScreen("personalScoreDisplay")}>
               View Personal Scores
