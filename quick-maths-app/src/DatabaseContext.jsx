@@ -89,6 +89,19 @@ export const DatabaseProvider = ({ children }) => {
     }
   }
 
+  async function updateDisplayName(newDisplayName) {
+    const { error } = await supabase
+      .from("profiles")
+      .update({display_name: newDisplayName})
+      .eq("user_id", user.id)
+      .single();
+    
+    if (error) {
+      console.log("Error updating display name: ", error.message);
+      throw error;
+    }
+  }
+
   async function getProfile() {
     const { data, error } = await supabase
       .from("profiles")
@@ -202,7 +215,7 @@ export const DatabaseProvider = ({ children }) => {
       .from("scores")
       .select("*")
       .eq("user_id", user.id)
-      .order("score", {ascending: false})
+      .order("score", { ascending: false })
       .limit(1)
       .single()
 
@@ -244,7 +257,25 @@ export const DatabaseProvider = ({ children }) => {
 
   return (
     <DatabaseContext.Provider
-      value={{ supabase, user, signUp, signIn, signOut, getProfile, getAllProfiles, getSpecificProfile, insertScore, getUserScores, getAllScores, checkDisplayName, deleteScore, deleteAllUserScores, getUserHighScore, getAllHighScores }}
+      value={{
+        supabase,
+        user,
+        signUp,
+        signIn,
+        signOut,
+        getProfile, 
+        getAllProfiles, 
+        getSpecificProfile, 
+        insertScore, 
+        getUserScores, 
+        getAllScores, 
+        checkDisplayName,
+        updateDisplayName, 
+        deleteScore, 
+        deleteAllUserScores, 
+        getUserHighScore, 
+        getAllHighScores
+      }}
     >
       {children}
     </DatabaseContext.Provider>

@@ -1,3 +1,10 @@
+.profile-settings {
+    color: black;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
 .delete-score, .confirm-delete-all-scores {
     background-color: rgb(255, 0, 0);
     color: white;
@@ -27,4 +34,16 @@
 
 .profile-settings .modal button {
     margin: 0 50px
+}
+
+.profile-settings-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1rem;
+}
+
+.display-name.option {
+    display: flex;
+    gap: 1rem;
 }
