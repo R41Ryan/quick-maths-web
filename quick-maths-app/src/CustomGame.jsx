@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGameSettings } from "./GameSettingContext";
 
 function CustomGame({ setScreen }) {
@@ -19,6 +19,7 @@ function CustomGame({ setScreen }) {
         setHasGoal,
         goalCount,
         setGoalCount,
+        setDefaults
     } = useGameSettings();
 
     const [message, setMessage] = useState("");
@@ -91,6 +92,10 @@ function CustomGame({ setScreen }) {
             setGoalCount(e.target.value);
         }
     }
+
+    useEffect(() => {
+        setDefaults();
+    }, [])
 
     return (
         <div className="custom-game">

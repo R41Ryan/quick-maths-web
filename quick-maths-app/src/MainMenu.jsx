@@ -6,6 +6,8 @@ import { useGameSettings } from "./GameSettingContext";
 function MainMenu({ setScreen }) {
   const { user, signOut, getProfile, getUserHighScore, getUserStreak } = useDatabase();
 
+  const { setInitialStandard } = useGameSettings();
+
   const [profile, setProfile] = useState(null);
   const [userHighScore, setUserHighScore] = useState(null);
   const [userDailyStreak, setUserDailyStreak] = useState(0);
@@ -88,7 +90,10 @@ function MainMenu({ setScreen }) {
         </div>
       )}
       <div className="game-selection">
-        <button>Start game</button>
+        <button onClick={() => {
+          setInitialStandard();
+          setScreen("gameInterface");
+        }}>Start game</button>
         <button onClick={() => setScreen("customGame")}>Custom game</button>
       </div>
     </div>

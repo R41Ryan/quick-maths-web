@@ -10,7 +10,29 @@ export function GameSettingProvider({ children }) {
   const [timed, setTimed] = useState(false);
   const [totalTime, setTotalTime] = useState(60);
   const [hasGoal, setHasGoal] = useState(false);
-  const [goalCount, setGoalCount] = useState(10);
+  const [goalCount, setGoalCount] = useState(100);
+
+  function setDefaults() {
+    setOperations(new Set());
+    setMinRange(0);
+    setMaxRange(10);
+    setHasNegatives(false);
+    setTimed(false);
+    setTotalTime(60);
+    setHasGoal(false);
+    setGoalCount(100);
+  }
+
+  function setInitialStandard() {
+    setOperations(new Set("+", "-", "x", "÷"));
+    setMinRange(0);
+    setMaxRange(100);
+    setHasNegatives(true);
+    setTimed(true);
+    setTotalTime(60);
+    setHasGoal(false);
+    setGoalCount(100);
+  }
 
   return (
     <GameSettingContext.Provider
@@ -31,6 +53,8 @@ export function GameSettingProvider({ children }) {
         setHasGoal,
         goalCount,
         setGoalCount,
+        setDefaults,
+        setInitialStandard
       }}
     >
       {children}
