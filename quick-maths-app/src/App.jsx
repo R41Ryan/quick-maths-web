@@ -11,6 +11,7 @@ import PersonalScoreDisplay from "./PersonalScoreDisplay";
 import PersonalProgressChart from "./PersonalProgressChart";
 import GlobalScoreDisplay from "./GlobalScoreDisplay";
 import ProfileSettings from "./ProfileSettings";
+import CustomGame from "./CustomGame";
 
 function App() {
   const [screen, setScreen] = useState("mainMenu");
@@ -38,6 +39,9 @@ function App() {
             )}
             {screen === "profileSettings" && (
               <ProfileSettings setScreen={setScreen} />
+            )}
+            {screen === "customGame" && (
+              <CustomGame setScreen={setScreen} />
             )}
           </AudioProvider>
         </GameSettingProvider>
