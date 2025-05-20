@@ -1,10 +1,3 @@
-#main-menu button {
-    background-color: rgb(255, 255, 255);
-    border-radius: 10px;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
-
 #operation-choice button:not(.selected):hover {
     background-color: initial;
     transform: none;

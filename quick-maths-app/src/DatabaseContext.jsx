@@ -92,10 +92,10 @@ export const DatabaseProvider = ({ children }) => {
   async function updateDisplayName(newDisplayName) {
     const { error } = await supabase
       .from("profiles")
-      .update({display_name: newDisplayName})
+      .update({ display_name: newDisplayName })
       .eq("user_id", user.id)
       .single();
-    
+
     if (error) {
       console.log("Error updating display name: ", error.message);
       throw error;
@@ -240,6 +240,45 @@ export const DatabaseProvider = ({ children }) => {
     }
   }
 
+  async function getUserStreak() {
+    const { data, error } = await supabase
+      .from("scores")
+      .select("created_at")
+      .eq("user_id", user.id);
+
+    if (error) {
+      console.error("Error getting time stamps of user scores", error.message);
+      throw error;
+    }
+
+    const uniqueDates = Array.from(new Set(data.map((row) => {
+      const date = new Date(row.created_at);
+      return date.toISOString().split('T')[0];
+    })));
+
+    uniqueDates.sort((a, b) => new Date(b) - new Date(a));
+    
+    let streak = 0;
+    let currentDate = new Date();
+    currentDate.setUTCHours(0, 0, 0, 0);
+
+    for (let i = 0; i < uniqueDates.length; i++) {
+      const streakDate = new Date(uniqueDates[i]);
+      streakDate.setUTCHours(0, 0, 0, 0);
+
+      const diffInDays = (currentDate - streakDate) / (1000 * 60 * 60 * 24);
+
+      if (diffInDays === 0 || diffInDays === 1) {
+        streak++;
+        currentDate.setDate(currentDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+
+    return streak;
+  }
+
   useEffect(() => {
     const session = supabase.auth.getSession();
     if (session) {
@@ -263,18 +302,19 @@ export const DatabaseProvider = ({ children }) => {
         signUp,
         signIn,
         signOut,
-        getProfile, 
-        getAllProfiles, 
-        getSpecificProfile, 
-        insertScore, 
-        getUserScores, 
-        getAllScores, 
+        getProfile,
+        getAllProfiles,
+        getSpecificProfile,
+        insertScore,
+        getUserScores,
+        getAllScores,
         checkDisplayName,
-        updateDisplayName, 
-        deleteScore, 
-        deleteAllUserScores, 
-        getUserHighScore, 
-        getAllHighScores
+        updateDisplayName,
+        deleteScore,
+        deleteAllUserScores,
+        getUserHighScore,
+        getAllHighScores,
+        getUserStreak
       }}
     >
       {children}

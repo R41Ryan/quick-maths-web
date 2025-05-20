@@ -23,10 +23,11 @@ function MainMenu({ setScreen }) {
     setGoalCount,
   } = useGameSettings();
 
-  const { user, signOut, getProfile, getUserHighScore } = useDatabase();
+  const { user, signOut, getProfile, getUserHighScore, getUserStreak } = useDatabase();
 
   const [profile, setProfile] = useState(null);
   const [userHighScore, setUserHighScore] = useState(null);
+  const [userDailyStreak, setUserDailyStreak] = useState(0);
   const [message, setMessage] = useState("");
 
   function handleOperationSelection(operation) {
@@ -123,7 +124,14 @@ function MainMenu({ setScreen }) {
       }
     }
 
+    async function fetchUserDailyStreak() {
+      if (profile != null) {
+        setUserDailyStreak(await getUserStreak());
+      }
+    }
+
     fetchUserHighScore();
+    fetchUserDailyStreak();
   }, [profile])
 
   return (
@@ -140,6 +148,10 @@ function MainMenu({ setScreen }) {
           <div className="user-high-score-display">
             <div>Your personal high score</div>
             <h3>{userHighScore ? userHighScore.score : "N/A"}</h3>
+          </div>
+          <div className="user-streak-display">
+            <div>Your daily streak</div>
+            <h3>{userDailyStreak}</h3>
           </div>
           <div className="profile-options">
             <button onClick={() => setScreen("personalScoreDisplay")}>
