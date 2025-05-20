@@ -31,9 +31,17 @@
     color: black;
 }
 
+#operation-choice p {
+    color: black;
+}
+
 #operation-choice button {
     margin: 0 5px;
     width: 50px;
+}
+
+#operation-choice .selected {
+    background-color: green;
 }
 
 #settings {

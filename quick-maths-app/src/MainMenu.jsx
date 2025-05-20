@@ -5,7 +5,8 @@ import { useGameSettings } from "./GameSettingContext";
 
 function MainMenu({ setScreen }) {
   const {
-    setOperation,
+    operations,
+    setOperations,
     minRange,
     setMinRange,
     maxRange,
@@ -26,15 +27,30 @@ function MainMenu({ setScreen }) {
 
   const [profile, setProfile] = useState(null);
   const [userHighScore, setUserHighScore] = useState(null);
+  const [message, setMessage] = useState("");
 
   function handleOperationSelection(operation) {
-    if (minRange > maxRange) {
-      let temp = minRange;
-      setMinRange(maxRange);
-      setMaxRange(temp);
+    const newSet = new Set(operations)
+    if (operations.has(operation)) {
+      newSet.delete(operation)
+    } else {
+      newSet.add(operation);
     }
-    setOperation(operation);
-    setScreen("gameInterface");
+    setOperations(newSet);
+  }
+
+  function handleStartGame() {
+    if (operations.size > 0) {
+      if (minRange > maxRange) {
+        let temp = minRange;
+        setMinRange(maxRange);
+        setMaxRange(temp);
+      }
+
+      setScreen("gameInterface");
+    } else {
+      setMessage("Please select at least 1 operation");
+    }
   }
 
   function handleSetMinRange(e) {
@@ -123,7 +139,7 @@ function MainMenu({ setScreen }) {
           <h2>Welcome, {profile.display_name}</h2>
           <div className="user-high-score-display">
             <div>Your personal high score</div>
-            <h3>{userHighScore ? userHighScore.score : "N/A" }</h3>
+            <h3>{userHighScore ? userHighScore.score : "N/A"}</h3>
           </div>
           <div className="profile-options">
             <button onClick={() => setScreen("personalScoreDisplay")}>
@@ -148,24 +164,27 @@ function MainMenu({ setScreen }) {
           <button onClick={() => setScreen("signIn")}>Sign In</button>
         </div>
       )}
+      <h2>Choose operations to play</h2>
       <div id="operation-choice">
-        <h2>Choose operation to play</h2>
-        <button onClick={() => handleOperationSelection("+")} id="addition">
+        <button onClick={() => handleOperationSelection("+")} id="addition" className={operations.has("+") ? "selected" : ""}>
           +
         </button>
-        <button onClick={() => handleOperationSelection("-")} id="subtraction">
+        <button onClick={() => handleOperationSelection("-")} id="subtraction" className={operations.has("-") ? "selected" : ""}>
           -
         </button>
         <button
           onClick={() => handleOperationSelection("x")}
           id="multiplication"
+          className={operations.has("x") ? "selected" : ""}
         >
           x
         </button>
-        <button onClick={() => handleOperationSelection("÷")} id="division">
+        <button onClick={() => handleOperationSelection("÷")} id="division" className={operations.has("÷") ? "selected" : ""}>
           ÷
         </button>
+        <p>{message}</p>
       </div>
+      <button className="start-game-button" onClick={handleStartGame}>Start game</button>
       <div id="settings">
         <h2>Settings</h2>
         <div className=".setting min-range">

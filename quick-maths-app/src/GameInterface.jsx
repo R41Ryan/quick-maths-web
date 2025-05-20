@@ -5,7 +5,7 @@ import { useDatabase } from "./DatabaseContext";
 
 function GameInterface({ setScreen }) {
   const {
-    operation,
+    operations,
     minRange,
     maxRange,
     hasNegatives,
@@ -17,8 +17,11 @@ function GameInterface({ setScreen }) {
 
   const { audioFiles, playSound } = useAudio();
 
-  const { user, insertScore, getUserScores, upsertUserHighScore } = useDatabase();
+  const { user, insertScore } = useDatabase();
 
+  const [operation, setOperation] = useState(() => {
+    return selectRandomOperation();
+  });
   const [operand1, setOperand1] = useState(() => {
     let operand = Math.floor(
       Math.random() * (maxRange - minRange + 1) + minRange
@@ -55,12 +58,12 @@ function GameInterface({ setScreen }) {
       correctAnswer = operand1;
       break;
     default:
-      const err = new Error(`Invalid Operation: ${operation}`);
+      const err = new Error(`Invalid Operation: "${operation}"`);
       console.error("Error Message: ", err.message);
       console.error("Stack trace: ", err.stack);
       throw err;
   }
-  const question = `${operand1Text} ${operation} ${operand2Text}`;
+  let question = `${operand1Text} ${operation} ${operand2Text}`;
 
   const [answer, setAnswer] = useState("");
   const [score, setScore] = useState(0);
@@ -109,28 +112,31 @@ function GameInterface({ setScreen }) {
 
     switch (operation) {
       case "+":
-      break;
-    case "-":
-      points += 1
-      break;
-    case "x":
-      points += 2;
-      break;
-    case "÷":
-      points += 3;
-      break;
-    default:
-      const err = new Error(`Invalid Operation to calcuate score: ${operation}`);
-      console.error("Error Message: ", err.message);
-      console.error("Stack trace: ", err.stack);
-      throw err;
+        break;
+      case "-":
+        points += 1
+        break;
+      case "x":
+        points += 2;
+        break;
+      case "÷":
+        points += 3;
+        break;
+      default:
+        const err = new Error(`Invalid Operation to calcuate score: ${operation}`);
+        console.error("Error Message: ", err.message);
+        console.error("Stack trace: ", err.stack);
+        throw err;
     }
 
     return points;
   }
 
   function createNewQuestion() {
-    setOperand1(() => {
+    let newOperation = selectRandomOperation();
+    setOperation(newOperation);
+
+    function generateNewOperand() {
       let operand = Math.floor(
         Math.random() * (maxRange - minRange + 1) + minRange
       );
@@ -138,16 +144,17 @@ function GameInterface({ setScreen }) {
         operand = Math.random() < 0.5 ? -operand : operand;
       }
       return operand;
-    });
-    setOperand2(() => {
-      let operand = Math.floor(
-        Math.random() * (maxRange - minRange + 1) + minRange
-      );
-      if (hasNegatives) {
-        operand = Math.random() < 0.5 ? -operand : operand;
-      }
-      return operand;
-    });
+    }
+
+    let newOperand1 = generateNewOperand();
+    setOperand1(newOperand1);
+    let newOperand2 = generateNewOperand();
+    setOperand2(newOperand2);
+  }
+
+  function selectRandomOperation() {
+    const operationsArray = Array.from(operations)
+    return operationsArray[Math.floor(Math.random() * operationsArray.length)]
   }
 
   function handleInputDigit(digit) {
@@ -204,8 +211,8 @@ function GameInterface({ setScreen }) {
       let seconds = Math.floor(timeToBeDisplayed / 1000 - minutes * 60);
       setTime(
         String(minutes).padStart(2, "0") +
-          ":" +
-          String(seconds).padStart(2, "0")
+        ":" +
+        String(seconds).padStart(2, "0")
       );
 
       if (endTime.current - Date.now() < 0 && timed) {
@@ -224,6 +231,8 @@ function GameInterface({ setScreen }) {
     }
 
     window.addEventListener("keydown", handleKeyDown);
+
+    selectRandomOperation();
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);

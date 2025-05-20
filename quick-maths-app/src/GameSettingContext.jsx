@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from "react";
 const GameSettingContext = createContext();
 
 export function GameSettingProvider({ children }) {
-  const [operation, setOperation] = useState("+");
+  const [operations, setOperations] = useState(new Set());
   const [minRange, setMinRange] = useState(0);
   const [maxRange, setMaxRange] = useState(10);
   const [hasNegatives, setHasNegatives] = useState(false);
@@ -15,8 +15,8 @@ export function GameSettingProvider({ children }) {
   return (
     <GameSettingContext.Provider
       value={{
-        operation,
-        setOperation,
+        operations,
+        setOperations,
         minRange,
         setMinRange,
         maxRange,
