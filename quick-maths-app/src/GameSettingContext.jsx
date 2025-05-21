@@ -11,6 +11,7 @@ export function GameSettingProvider({ children }) {
   const [totalTime, setTotalTime] = useState(60);
   const [hasGoal, setHasGoal] = useState(false);
   const [goalCount, setGoalCount] = useState(100);
+  const [isCustom, setIsCustom] = useState(false);
 
   function setDefaults() {
     setOperations(new Set());
@@ -21,6 +22,7 @@ export function GameSettingProvider({ children }) {
     setTotalTime(60);
     setHasGoal(false);
     setGoalCount(100);
+    setIsCustom(true);
   }
 
   function setInitialStandard() {
@@ -32,6 +34,7 @@ export function GameSettingProvider({ children }) {
     setTotalTime(60);
     setHasGoal(false);
     setGoalCount(100);
+    setIsCustom(false);
   }
 
   return (
@@ -53,6 +56,8 @@ export function GameSettingProvider({ children }) {
         setHasGoal,
         goalCount,
         setGoalCount,
+        isCustom,
+        setIsCustom,
         setDefaults,
         setInitialStandard
       }}

@@ -13,6 +13,7 @@ function GameInterface({ setScreen }) {
     totalTime,
     hasGoal,
     goalCount,
+    isCustom
   } = useGameSettings();
 
   const { audioFiles, playSound } = useAudio();
@@ -193,12 +194,13 @@ function GameInterface({ setScreen }) {
   }
 
   async function handleSaveScore() {
-    if (user) {
+    if (user && !isCustom) {
       insertScore(score, Math.floor((Date.now() - startTime.current) / 1000));
     }
   }
 
   useEffect(() => {
+    console.log(isCustom);
     timerIntervalRef.current = setInterval(() => {
       let timeToBeDisplayed;
       if (timed) {
