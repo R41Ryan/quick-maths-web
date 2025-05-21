@@ -251,13 +251,14 @@ export const DatabaseProvider = ({ children }) => {
       throw error;
     }
 
-    const uniqueDates = Array.from(new Set(data.map((row) => {
-      const date = new Date(row.created_at);
-      return date.toISOString().split('T')[0];
-    })));
+    const uniqueDates = Array.from(new Set(data.map((row) => 
+      new Date(row.created_at).toLocaleDateString("en-CA")
+    )));
 
     uniqueDates.sort((a, b) => new Date(b) - new Date(a));
     
+    console.log(uniqueDates);
+
     let streak = 0;
     let currentDate = new Date();
     currentDate.setUTCHours(0, 0, 0, 0);
