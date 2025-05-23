@@ -43,6 +43,7 @@ function SignInInterface({ setScreen }) {
         )}
         <button type="submit">Sign In</button>
       </form>
+      <button onClick={() => setScreen("forgotPassword")}>Forgot password?</button>
       <button onClick={() => setScreen("mainMenu")}>Back to Main Menu</button>
     </div>
   );

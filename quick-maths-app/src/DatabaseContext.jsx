@@ -251,12 +251,12 @@ export const DatabaseProvider = ({ children }) => {
       throw error;
     }
 
-    const uniqueDates = Array.from(new Set(data.map((row) => 
+    const uniqueDates = Array.from(new Set(data.map((row) =>
       new Date(row.created_at).toLocaleDateString("en-CA")
     )));
 
     uniqueDates.sort((a, b) => new Date(b) - new Date(a));
-    
+
     console.log(uniqueDates);
 
     let streak = 0;
@@ -281,10 +281,14 @@ export const DatabaseProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    const session = supabase.auth.getSession();
-    if (session) {
-      setUser(session.user);
+    const init = async () => {
+      const session = await supabase.auth.getSession();
+      if (session) {
+        setUser(session.user);
+      }
     }
+
+    init();
 
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null);

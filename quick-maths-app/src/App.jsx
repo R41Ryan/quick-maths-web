@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AudioProvider } from "./AudioContext";
 import { GameSettingProvider } from "./GameSettingContext";
 import { DatabaseProvider } from "./DatabaseContext";
@@ -12,9 +12,29 @@ import PersonalProgressChart from "./PersonalProgressChart";
 import GlobalScoreDisplay from "./GlobalScoreDisplay";
 import ProfileSettings from "./ProfileSettings";
 import CustomGame from "./CustomGame";
+import PasswordReset from "./PasswordReset";
+import ForgotPassword from "./ForgotPassword";
+import supabase from "./supabaseClient";
 
 function App() {
   const [screen, setScreen] = useState("mainMenu");
+
+  useEffect(() => {
+    const checkReset = async () => {
+      console.log("checking reset with additional check");
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      const accessToken = hashParams.get("access_tokens");
+      const refreshToken = hashParams.get("refresh_token");
+      const type = hashParams.get("type");
+
+      if (type === "recovery") {
+        console.log("detected password recovery");
+        setScreen("passwordReset");
+      }
+    }
+
+    checkReset();
+  }, [])
 
   return (
     <>
@@ -42,6 +62,12 @@ function App() {
             )}
             {screen === "customGame" && (
               <CustomGame setScreen={setScreen} />
+            )}
+            {screen === "passwordReset" && (
+              <PasswordReset setScreen={setScreen} />
+            )}
+            {screen === "forgotPassword" && (
+              <ForgotPassword setScreen={setScreen} />
             )}
           </AudioProvider>
         </GameSettingProvider>
