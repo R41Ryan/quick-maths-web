@@ -17,18 +17,16 @@ import ForgotPassword from "./ForgotPassword";
 import supabase from "./supabaseClient";
 
 function App() {
-  const [screen, setScreen] = useState("mainMenu");
+  const [screen, setScreen] = useState("passwordReset");
 
   useEffect(() => {
     const checkReset = async () => {
-      console.log("checking reset with additional check");
       const hashParams = new URLSearchParams(window.location.hash.substring(1));
       const accessToken = hashParams.get("access_tokens");
       const refreshToken = hashParams.get("refresh_token");
       const type = hashParams.get("type");
 
       if (type === "recovery") {
-        console.log("detected password recovery");
         setScreen("passwordReset");
       }
     }

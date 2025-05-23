@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import supabase from "./supabaseClient";
 import { useDatabase } from "./DatabaseContext";
+import "./PasswordReset.css"
 
 function PasswordReset({ setScreen }) {
     const { user } = useDatabase();
@@ -43,13 +44,15 @@ function PasswordReset({ setScreen }) {
     return (
         <div className="reset-password">
             <h2>Reset your password</h2>
-            <label htmlFor="newPassword">New Password</label>
-            <input type="password" id="newPassword" onChange={(e) => setNewPassword(e.target.value)} />
-            <label htmlFor="confirmPassword">Confirm New Password</label>
-            <input type="password" id="confirmPassword" onChange={(e) => setConfirmPassword(e.target.value)} />
-            <button onClick={handleReset} disabled={loading}>
-                {loading ? "Resetting" : "Reset Password"}
-            </button>
+            <div className="reset-password-input">
+                <label htmlFor="newPassword">New Password</label>
+                <input type="password" id="newPassword" onChange={(e) => setNewPassword(e.target.value)} />
+                <label htmlFor="confirmPassword">Confirm New Password</label>
+                <input type="password" id="confirmPassword" onChange={(e) => setConfirmPassword(e.target.value)} />
+                <button onClick={handleReset} disabled={loading}>
+                    {loading ? "Resetting" : "Reset Password"}
+                </button>
+            </div>
 
             {error && <p style={{ color: "red" }}>{error}</p>}
             {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
