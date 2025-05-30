@@ -17,7 +17,7 @@ import ForgotPassword from "./ForgotPassword";
 import supabase from "./supabaseClient";
 
 function App() {
-  const [screen, setScreen] = useState("passwordReset");
+  const [screen, setScreen] = useState("mainMenu");
 
   useEffect(() => {
     const checkReset = async () => {
