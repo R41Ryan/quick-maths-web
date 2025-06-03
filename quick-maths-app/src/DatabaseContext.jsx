@@ -287,7 +287,6 @@ export const DatabaseProvider = ({ children }) => {
       console.error("Error fetching achievement definitions:", error.message);
       return null;
     } else {
-      console.log(data);
       return data;
     }
   }

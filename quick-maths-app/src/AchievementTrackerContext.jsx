@@ -8,7 +8,7 @@ export const AchievementTrackerProvider = ({ children }) => {
   const [achievementDefinitions, setAchievementDefinitions] = useState([]);
   const [userAchievements, setUserAchievements] = useState([]);
 
-  const checkAchievemnts = async () => {
+  const checkAchievements = async () => {
     const fetchUserAchievements = async () => {
       const achievements = await getUserAchievements();
       setUserAchievements(achievements);
@@ -22,14 +22,14 @@ export const AchievementTrackerProvider = ({ children }) => {
         switch (achievement.type) {
           case "highscore":
             const highScore = await getUserHighScore(user.id);
-            if (highScore >= achievement.target) {
-              addUserAchievement(achievement.id);
+            if (highScore.score >= achievement.target) {
+              await addUserAchievement(achievement.id);
             }
             break;
           case "daily_streak":
             const streak = await getUserStreak(user.id);
             if (streak >= achievement.target) {
-              addUserAchievement(achievement.id);
+              await addUserAchievement(achievement.id);
             }
             break;
           default:
@@ -59,7 +59,7 @@ export const AchievementTrackerProvider = ({ children }) => {
   }, [user]);
 
   return (
-    <AchievementTrackerContext.Provider value={{achievementDefinitions, userAchievements, checkAchievemnts}}>
+    <AchievementTrackerContext.Provider value={{achievementDefinitions, userAchievements, checkAchievements}}>
       {children}
     </AchievementTrackerContext.Provider>
   );

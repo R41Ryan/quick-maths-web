@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useGameSettings } from "./GameSettingContext";
 import { useAudio } from "./AudioContext";
 import { useDatabase } from "./DatabaseContext";
+import { useAchievementTracker } from "./AchievementTrackerContext";
 
 function GameInterface({ setScreen }) {
   const {
@@ -19,6 +20,8 @@ function GameInterface({ setScreen }) {
   const { audioFiles, playSound } = useAudio();
 
   const { user, insertScore } = useDatabase();
+
+  const { checkAchievements } = useAchievementTracker();
 
   const [operation, setOperation] = useState(() => {
     return selectRandomOperation();
@@ -195,7 +198,8 @@ function GameInterface({ setScreen }) {
 
   async function handleSaveScore() {
     if (user && !isCustom) {
-      insertScore(score, Math.floor((Date.now() - startTime.current) / 1000));
+      await insertScore(score, Math.floor((Date.now() - startTime.current) / 1000));
+      checkAchievements();
     }
   }
 

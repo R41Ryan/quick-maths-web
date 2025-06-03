@@ -1,10 +1,12 @@
 import "./MainMenu.css";
 import { useEffect, useRef, useState } from "react";
 import { useDatabase } from "./DatabaseContext";
+import { useAchievementTracker } from "./AchievementTrackerContext";
 import { useGameSettings } from "./GameSettingContext";
 
 function MainMenu({ setScreen }) {
   const { user, signOut, getProfile, getUserHighScore, getUserStreak } = useDatabase();
+  const { checkAchievements } = useAchievementTracker();
 
   const { setInitialStandard } = useGameSettings();
 
@@ -22,7 +24,14 @@ function MainMenu({ setScreen }) {
       }
     }
 
+    async function checkUserAchievements() {
+      if (user != null) {
+        await checkAchievements();
+      }
+    }
+
     fetchProfile();
+    checkUserAchievements();
   }, [user]);
 
   useEffect(() => {

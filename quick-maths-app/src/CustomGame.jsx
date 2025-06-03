@@ -184,7 +184,7 @@ function CustomGame({ setScreen }) {
                 className="back-to-main-menu-btn"
                 onClick={() => setScreen("mainMenu")}
             >
-                Back to main menu
+                Back to Main Menu
             </button>
         </div>
     );
