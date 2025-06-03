@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AudioProvider } from "./AudioContext";
 import { GameSettingProvider } from "./GameSettingContext";
 import { DatabaseProvider } from "./DatabaseContext";
+import { AchievementTrackerProvider } from "./AchievementTrackerContext";
 import Header from "./Header";
 import MainMenu from "./MainMenu";
 import GameInterface from "./GameInterface";
@@ -37,38 +38,40 @@ function App() {
   return (
     <>
       <DatabaseProvider>
-        <GameSettingProvider>
+        <AchievementTrackerProvider>
           <AudioProvider>
-            <Header />
-            {screen === "mainMenu" && <MainMenu setScreen={setScreen} />}
-            {screen === "gameInterface" && (
-              <GameInterface setScreen={setScreen} />
-            )}
-            {screen === "signUp" && <SignUpInterface setScreen={setScreen} />}
-            {screen === "signIn" && <SignInInterface setScreen={setScreen} />}
-            {screen === "personalScoreDisplay" && (
-              <PersonalScoreDisplay setScreen={setScreen} />
-            )}
-            {screen === "personalProgressChart" && (
-              <PersonalProgressChart setScreen={setScreen} />
-            )}
-            {screen === "globalScoreDisplay" && (
-              <GlobalScoreDisplay setScreen={setScreen} />
-            )}
-            {screen === "profileSettings" && (
-              <ProfileSettings setScreen={setScreen} />
-            )}
-            {screen === "customGame" && (
-              <CustomGame setScreen={setScreen} />
-            )}
-            {screen === "passwordReset" && (
-              <PasswordReset setScreen={setScreen} />
-            )}
-            {screen === "forgotPassword" && (
-              <ForgotPassword setScreen={setScreen} />
-            )}
+            <GameSettingProvider>
+                <Header />
+                {screen === "mainMenu" && <MainMenu setScreen={setScreen} />}
+                {screen === "gameInterface" && (
+                  <GameInterface setScreen={setScreen} />
+                )}
+                {screen === "signUp" && <SignUpInterface setScreen={setScreen} />}
+                {screen === "signIn" && <SignInInterface setScreen={setScreen} />}
+                {screen === "personalScoreDisplay" && (
+                  <PersonalScoreDisplay setScreen={setScreen} />
+                )}
+                {screen === "personalProgressChart" && (
+                  <PersonalProgressChart setScreen={setScreen} />
+                )}
+                {screen === "globalScoreDisplay" && (
+                  <GlobalScoreDisplay setScreen={setScreen} />
+                )}
+                {screen === "profileSettings" && (
+                  <ProfileSettings setScreen={setScreen} />
+                )}
+                {screen === "customGame" && (
+                  <CustomGame setScreen={setScreen} />
+                )}
+                {screen === "passwordReset" && (
+                  <PasswordReset setScreen={setScreen} />
+                )}
+                {screen === "forgotPassword" && (
+                  <ForgotPassword setScreen={setScreen} />
+                )}
+            </GameSettingProvider>
           </AudioProvider>
-        </GameSettingProvider>
+        </AchievementTrackerProvider>
       </DatabaseProvider>
     </>
   );

@@ -280,6 +280,45 @@ export const DatabaseProvider = ({ children }) => {
     return streak;
   }
 
+  async function getAllAchievementDefinitions() {
+    const { data, error } = await supabase
+      .from("achievement_definitions")
+      .select("*");
+
+    if (error) {
+      console.error("Error fetching achievement definitions:", error.message);
+      return null;
+    } else {
+      return data;
+    }
+  }
+
+  async function getUserAchievements() {
+    const { data, error } = await supabase
+      .from("achievements")
+      .select("achievement_id")
+      .eq("user_id", user.id);
+    
+    if (error) {
+      console.error("Error fetching user achievements:", error.message);
+      return null;
+    } else {
+      return data;
+    }
+  }
+
+  async function addUserAchievement(achievementId) {
+    const { error } = await supabase
+    .from("achievements")
+    .insert([{ user_id: user.id, achievement_id: achievementId }])
+    .single();
+
+    if (error) {
+      console.error("Error adding user achievement:", error.message);
+      throw error;
+    }
+  }
+
   useEffect(() => {
     const init = async () => {
       const session = await supabase.auth.getSession();
@@ -319,7 +358,10 @@ export const DatabaseProvider = ({ children }) => {
         deleteAllUserScores,
         getUserHighScore,
         getAllHighScores,
-        getUserStreak
+        getUserStreak,
+        getAllAchievementDefinitions,
+        getUserAchievements,
+        addUserAchievement,
       }}
     >
       {children}
