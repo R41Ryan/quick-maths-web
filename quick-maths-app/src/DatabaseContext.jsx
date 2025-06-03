@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, use, useContext, useEffect, useState } from "react";
 import supabase from "./supabaseClient";
 
 const DatabaseContext = createContext();
@@ -257,8 +257,6 @@ export const DatabaseProvider = ({ children }) => {
 
     uniqueDates.sort((a, b) => new Date(b) - new Date(a));
 
-    console.log(uniqueDates);
-
     let streak = 0;
     let currentDate = new Date();
     currentDate.setUTCHours(0, 0, 0, 0);
@@ -289,6 +287,7 @@ export const DatabaseProvider = ({ children }) => {
       console.error("Error fetching achievement definitions:", error.message);
       return null;
     } else {
+      console.log(data);
       return data;
     }
   }

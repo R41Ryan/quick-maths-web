@@ -73,6 +73,9 @@ function MainMenu({ setScreen }) {
             <button onClick={() => setScreen("personalProgressChart")}>
               View Personal Progress Chart
             </button>
+            <button onClick={() => setScreen("userAchievements")}>
+              View Achievements
+            </button>
             <button onClick={() => setScreen("profileSettings")}>Profile Settings</button>
             <button onClick={() => signOut()}>Sign Out</button>
           </div>

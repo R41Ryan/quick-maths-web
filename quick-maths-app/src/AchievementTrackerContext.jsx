@@ -53,7 +53,9 @@ export const AchievementTrackerProvider = ({ children }) => {
     };
 
     fetchAchievementDefinitions();
-    fetchUserAchievements();
+    if (user) {
+      fetchUserAchievements();
+    }
   }, [user]);
 
   return (
@@ -63,6 +65,6 @@ export const AchievementTrackerProvider = ({ children }) => {
   );
 };
 
-export const useAchievement = () => {
+export const useAchievementTracker = () => {
   return useContext(AchievementTrackerContext);
 };

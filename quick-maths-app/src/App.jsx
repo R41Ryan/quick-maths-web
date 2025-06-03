@@ -11,6 +11,7 @@ import SignInInterface from "./SignInInterface";
 import PersonalScoreDisplay from "./PersonalScoreDisplay";
 import PersonalProgressChart from "./PersonalProgressChart";
 import GlobalScoreDisplay from "./GlobalScoreDisplay";
+import UserAchievements from "./UserAchievements";
 import ProfileSettings from "./ProfileSettings";
 import CustomGame from "./CustomGame";
 import PasswordReset from "./PasswordReset";
@@ -56,6 +57,9 @@ function App() {
                 )}
                 {screen === "globalScoreDisplay" && (
                   <GlobalScoreDisplay setScreen={setScreen} />
+                )}
+                {screen === "userAchievements" && (
+                  <UserAchievements setScreen={setScreen} />
                 )}
                 {screen === "profileSettings" && (
                   <ProfileSettings setScreen={setScreen} />
