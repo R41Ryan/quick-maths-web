@@ -312,6 +312,7 @@ export const DatabaseProvider = ({ children }) => {
     .single();
 
     if (error) {
+      if (error.message.includes("duplicate key value violates unique constraint")) return; // Ignore duplicate entries
       console.error("Error adding user achievement:", error.message);
       throw error;
     }
