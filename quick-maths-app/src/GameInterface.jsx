@@ -204,7 +204,6 @@ function GameInterface({ setScreen }) {
   }
 
   useEffect(() => {
-    console.log(isCustom);
     timerIntervalRef.current = setInterval(() => {
       let timeToBeDisplayed;
       if (timed) {

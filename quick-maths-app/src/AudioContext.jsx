@@ -10,6 +10,7 @@ export const AudioProvider = ({ children }) => {
         correct: new Audio(soundFilePath + "Retro10.mp3"),
         gameOver: new Audio(soundFilePath + "Wood Block2.mp3"),
         gameWin: new Audio(soundFilePath + "gameWin.wav"),
+        achievementUnlock: new Audio(soundFilePath + "achievementUnlock.mp3"),
     };
 
     /**

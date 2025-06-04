@@ -1,0 +1,22 @@
+.achievement-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: opacity 0.3s ease-in-out;
+}
+
+.achievement-notification.hidden {
+    opacity: 0;
+    pointer-events: none; /* Prevent interaction when hidden */
+}
+
+.achievement-notification ul {
+    list-style-type: none;
+    margin: 1rem;
+    padding: 0;
+}

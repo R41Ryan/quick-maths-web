@@ -31,51 +31,49 @@ function App() {
       if (type === "recovery") {
         setScreen("passwordReset");
       }
-    }
+    };
 
     checkReset();
-  }, [])
+  }, []);
 
   return (
     <>
       <DatabaseProvider>
-        <AchievementTrackerProvider>
-          <AudioProvider>
+        <AudioProvider>
+          <AchievementTrackerProvider>
             <GameSettingProvider>
-                <Header />
-                {screen === "mainMenu" && <MainMenu setScreen={setScreen} />}
-                {screen === "gameInterface" && (
-                  <GameInterface setScreen={setScreen} />
-                )}
-                {screen === "signUp" && <SignUpInterface setScreen={setScreen} />}
-                {screen === "signIn" && <SignInInterface setScreen={setScreen} />}
-                {screen === "personalScoreDisplay" && (
-                  <PersonalScoreDisplay setScreen={setScreen} />
-                )}
-                {screen === "personalProgressChart" && (
-                  <PersonalProgressChart setScreen={setScreen} />
-                )}
-                {screen === "globalScoreDisplay" && (
-                  <GlobalScoreDisplay setScreen={setScreen} />
-                )}
-                {screen === "userAchievements" && (
-                  <UserAchievements setScreen={setScreen} />
-                )}
-                {screen === "profileSettings" && (
-                  <ProfileSettings setScreen={setScreen} />
-                )}
-                {screen === "customGame" && (
-                  <CustomGame setScreen={setScreen} />
-                )}
-                {screen === "passwordReset" && (
-                  <PasswordReset setScreen={setScreen} />
-                )}
-                {screen === "forgotPassword" && (
-                  <ForgotPassword setScreen={setScreen} />
-                )}
+              <Header />
+              {screen === "mainMenu" && <MainMenu setScreen={setScreen} />}
+              {screen === "gameInterface" && (
+                <GameInterface setScreen={setScreen} />
+              )}
+              {screen === "signUp" && <SignUpInterface setScreen={setScreen} />}
+              {screen === "signIn" && <SignInInterface setScreen={setScreen} />}
+              {screen === "personalScoreDisplay" && (
+                <PersonalScoreDisplay setScreen={setScreen} />
+              )}
+              {screen === "personalProgressChart" && (
+                <PersonalProgressChart setScreen={setScreen} />
+              )}
+              {screen === "globalScoreDisplay" && (
+                <GlobalScoreDisplay setScreen={setScreen} />
+              )}
+              {screen === "userAchievements" && (
+                <UserAchievements setScreen={setScreen} />
+              )}
+              {screen === "profileSettings" && (
+                <ProfileSettings setScreen={setScreen} />
+              )}
+              {screen === "customGame" && <CustomGame setScreen={setScreen} />}
+              {screen === "passwordReset" && (
+                <PasswordReset setScreen={setScreen} />
+              )}
+              {screen === "forgotPassword" && (
+                <ForgotPassword setScreen={setScreen} />
+              )}
             </GameSettingProvider>
-          </AudioProvider>
-        </AchievementTrackerProvider>
+          </AchievementTrackerProvider>
+        </AudioProvider>
       </DatabaseProvider>
     </>
   );
