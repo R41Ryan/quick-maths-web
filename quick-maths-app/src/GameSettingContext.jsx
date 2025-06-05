@@ -26,7 +26,7 @@ export function GameSettingProvider({ children }) {
   }
 
   function setInitialStandard() {
-    setOperations(new Set("+", "-", "x", "÷"));
+    setOperations(new Set(["+", "-", "x", "÷"]));
     setMinRange(0);
     setMaxRange(100);
     setHasNegatives(true);
