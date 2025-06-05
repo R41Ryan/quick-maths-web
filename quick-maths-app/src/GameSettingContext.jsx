@@ -13,6 +13,39 @@ export function GameSettingProvider({ children }) {
   const [goalCount, setGoalCount] = useState(100);
   const [isCustom, setIsCustom] = useState(false);
 
+  const difficultySettings = [
+    {
+      operations: new Set(["+"]),
+      minRange: 0,
+      maxRange: 10,
+      hasNegatives: false
+    },
+    {
+      operations: new Set(["+", "-"]),
+      minRange: 0,
+      maxRange: 20,
+      hasNegatives: false
+    },
+    {
+      operations: new Set(["+", "-", "x"]),
+      minRange: 0,
+      maxRange: 20,
+      hasNegatives: true
+    },
+    {
+      operations: new Set(["+", "-", "x"]),
+      minRange: 0,
+      maxRange: 50,
+      hasNegatives: true
+    },
+    {
+      operations: new Set(["+", "-", "x", "÷"]),
+      minRange: 0,
+      maxRange: 100,
+      hasNegatives: true
+    }
+  ]
+
   function setDefaults() {
     setOperations(new Set());
     setMinRange(0);
@@ -26,15 +59,26 @@ export function GameSettingProvider({ children }) {
   }
 
   function setInitialStandard() {
-    setOperations(new Set(["+", "-", "x", "÷"]));
-    setMinRange(0);
-    setMaxRange(100);
-    setHasNegatives(true);
+    setDifficulty(0);
     setTimed(true);
     setTotalTime(60);
     setHasGoal(false);
     setGoalCount(100);
     setIsCustom(false);
+  }
+
+  function setDifficulty(difficultyLevel) {
+    if (difficultyLevel < 0) {
+      difficultyLevel = 0;
+    }
+    if (difficultyLevel >= difficultySettings.length) {
+      difficultyLevel = difficultySettings.length - 1;
+    }
+
+    setOperations(difficultySettings[difficultyLevel].operations);
+    setMinRange(difficultySettings[difficultyLevel].minRange);
+    setMaxRange(difficultySettings[difficultyLevel].maxRange);
+    setHasNegatives(difficultySettings[difficultyLevel].hasNegatives);
   }
 
   return (
@@ -59,7 +103,8 @@ export function GameSettingProvider({ children }) {
         isCustom,
         setIsCustom,
         setDefaults,
-        setInitialStandard
+        setInitialStandard,
+        setDifficulty
       }}
     >
       {children}

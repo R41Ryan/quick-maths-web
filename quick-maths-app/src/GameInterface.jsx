@@ -14,13 +14,11 @@ function GameInterface({ setScreen }) {
     totalTime,
     hasGoal,
     goalCount,
-    isCustom
+    isCustom,
+    setDifficulty
   } = useGameSettings();
-
   const { audioFiles, playSound } = useAudio();
-
   const { user, insertScore } = useDatabase();
-
   const { checkAchievements } = useAchievementTracker();
 
   const [operation, setOperation] = useState(() => {
@@ -44,6 +42,7 @@ function GameInterface({ setScreen }) {
     }
     return operand;
   });
+
   let correctAnswer = NaN;
   let operand1Text = operand1;
   let operand2Text = operand2;
@@ -263,7 +262,30 @@ function GameInterface({ setScreen }) {
   useEffect(() => {
     if (score >= goalCount && hasGoal) {
       setGameWin(true);
+      return;
     }
+    
+    if (score > 500) {
+      setDifficulty(5);
+      return;
+    }
+    if (score > 350) {
+      setDifficulty(4);
+      return;
+    }
+    if (score > 200) {
+      setDifficulty(3);
+      return;
+    }
+    if (score > 100) {
+      setDifficulty(2);
+      return;
+    }
+    if (score > 50) {
+      setDifficulty(1);
+      return;
+    }
+
   }, [score]);
 
   useEffect(() => {
