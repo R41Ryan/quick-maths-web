@@ -11,6 +11,7 @@ export const AudioProvider = ({ children }) => {
         gameOver: new Audio(soundFilePath + "Wood Block2.mp3"),
         gameWin: new Audio(soundFilePath + "gameWin.wav"),
         achievementUnlock: new Audio(soundFilePath + "achievementUnlock.mp3"),
+        timeIncrease: new Audio(soundFilePath + "timeIncrease.mp3"),
     };
 
     /**

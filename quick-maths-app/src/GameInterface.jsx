@@ -3,6 +3,7 @@ import { useGameSettings } from "./GameSettingContext";
 import { useAudio } from "./AudioContext";
 import { useDatabase } from "./DatabaseContext";
 import { useAchievementTracker } from "./AchievementTrackerContext";
+import "./GameInterface.css";
 
 function GameInterface({ setScreen }) {
   const {
@@ -15,7 +16,7 @@ function GameInterface({ setScreen }) {
     hasGoal,
     goalCount,
     isCustom,
-    setDifficulty
+    setDifficulty,
   } = useGameSettings();
   const { audioFiles, playSound } = useAudio();
   const { user, insertScore } = useDatabase();
@@ -73,6 +74,8 @@ function GameInterface({ setScreen }) {
   const [correct, setCorrect] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [gameWin, setGameWin] = useState(false);
+  const [timeIncreaseNotification, setTimeIncreaseNotification] =
+    useState(false);
 
   const endTime = useRef(Date.now() + totalTime * 1000);
   const startTime = useRef(Date.now());
@@ -93,6 +96,7 @@ function GameInterface({ setScreen }) {
   const canInput = useRef(true);
   const timerIntervalRef = useRef(null);
   const correctTimeoutRef = useRef(null);
+  const nextTimeIncreaseScore = useRef(50);
 
   function calculateScore() {
     let points = 1;
@@ -117,7 +121,7 @@ function GameInterface({ setScreen }) {
       case "+":
         break;
       case "-":
-        points += 1
+        points += 1;
         break;
       case "x":
         points += 2;
@@ -126,7 +130,9 @@ function GameInterface({ setScreen }) {
         points += 3;
         break;
       default:
-        const err = new Error(`Invalid Operation to calcuate score: ${operation}`);
+        const err = new Error(
+          `Invalid Operation to calcuate score: ${operation}`
+        );
         console.error("Error Message: ", err.message);
         console.error("Stack trace: ", err.stack);
         throw err;
@@ -156,8 +162,8 @@ function GameInterface({ setScreen }) {
   }
 
   function selectRandomOperation() {
-    const operationsArray = Array.from(operations)
-    return operationsArray[Math.floor(Math.random() * operationsArray.length)]
+    const operationsArray = Array.from(operations);
+    return operationsArray[Math.floor(Math.random() * operationsArray.length)];
   }
 
   function handleInputDigit(digit) {
@@ -197,7 +203,10 @@ function GameInterface({ setScreen }) {
 
   async function handleSaveScore() {
     if (user && !isCustom) {
-      await insertScore(score, Math.floor((Date.now() - startTime.current) / 1000));
+      await insertScore(
+        score,
+        Math.floor((Date.now() - startTime.current) / 1000)
+      );
       checkAchievements();
     }
   }
@@ -215,8 +224,8 @@ function GameInterface({ setScreen }) {
       let seconds = Math.floor(timeToBeDisplayed / 1000 - minutes * 60);
       setTime(
         String(minutes).padStart(2, "0") +
-        ":" +
-        String(seconds).padStart(2, "0")
+          ":" +
+          String(seconds).padStart(2, "0")
       );
 
       if (endTime.current - Date.now() < 0 && timed) {
@@ -264,28 +273,41 @@ function GameInterface({ setScreen }) {
       setGameWin(true);
       return;
     }
-    
-    if (score > 500) {
-      setDifficulty(5);
-      return;
-    }
-    if (score > 350) {
-      setDifficulty(4);
-      return;
-    }
-    if (score > 200) {
-      setDifficulty(3);
-      return;
-    }
-    if (score > 100) {
-      setDifficulty(2);
-      return;
-    }
-    if (score > 50) {
-      setDifficulty(1);
-      return;
-    }
 
+    if (!isCustom) {
+      if (score > nextTimeIncreaseScore.current) {
+        nextTimeIncreaseScore.current += 50;
+        if (timed) {
+          endTime.current += 30 * 1000;
+          playSound(audioFiles.timeIncrease);
+          setTimeIncreaseNotification(true);
+          setTimeout(() => {
+            setTimeIncreaseNotification(false);
+          }, 1000);
+        }
+      }
+
+      if (score > 500) {
+        setDifficulty(5);
+        return;
+      }
+      if (score > 350) {
+        setDifficulty(4);
+        return;
+      }
+      if (score > 200) {
+        setDifficulty(3);
+        return;
+      }
+      if (score > 100) {
+        setDifficulty(2);
+        return;
+      }
+      if (score > 50) {
+        setDifficulty(1);
+        return;
+      }
+    }
   }, [score]);
 
   useEffect(() => {
@@ -328,7 +350,16 @@ function GameInterface({ setScreen }) {
 
   return (
     <div id="game-interface">
-      <h2 id="timer">{time}</h2>
+      <h2 className="timer">
+        {time}
+        <span
+          className={`time-increase-notification ${
+            timeIncreaseNotification ? "fade-up" : ""
+          }`}
+        >
+          +30s
+        </span>
+      </h2>
       <h2 id="score">Score: {score}</h2>
       <h2 id="question">{question}</h2>
       <h2 className={`answer ${correct ? "correct" : ""}`}>
