@@ -70,6 +70,7 @@ function PersonalScoreDisplay({ setScreen }) {
   return (
     <div className="personal-score-display">
       <h2>Your Scores</h2>
+      <button className="back-to-main-menu-btn" onClick={() => setScreen("mainMenu")}>Back to Main Menu</button>
       <table>
         <thead>
           <tr>
@@ -96,7 +97,6 @@ function PersonalScoreDisplay({ setScreen }) {
           )}
         </tbody>
       </table>
-      <button className="back-to-main-menu-btn" onClick={() => setScreen("mainMenu")}>Back to Main Menu</button>
     </div>
   );
 }

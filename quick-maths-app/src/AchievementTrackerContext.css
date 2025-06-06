@@ -20,3 +20,15 @@
     margin: 1rem;
     padding: 0;
 }
+
+@media (max-width: 430px) {
+    .achievement-notification {
+        bottom: 0;
+        right: 50%;
+        transform: translate(50%, -50%);
+    }
+    .achievement-notification ul {
+        margin: 0.5rem;
+    }
+    
+}

@@ -7,6 +7,12 @@ function UserAchievements({ setScreen }) {
   return (
     <div className="user-achievements">
       <h2>Your Achievements</h2>
+      <button
+        className="back-to-main-menu-btn"
+        onClick={() => setScreen("mainMenu")}
+      >
+        Back to Main Menu
+      </button>
       <div className="achievement-list">
         {(achievementDefinitions === null) ? (
           <p>Loading...</p>
@@ -27,12 +33,6 @@ function UserAchievements({ setScreen }) {
           })
         )}
       </div>
-      <button
-        className="back-to-main-menu-btn"
-        onClick={() => setScreen("mainMenu")}
-      >
-        Back to Main Menu
-      </button>
     </div>
   );
 }
